@@ -62,7 +62,7 @@ export default function Home() {
 								{minutesError ? (
 									<p className="text-muted-foreground">Error loading minutes listened</p>
 								) : (
-									<p className="text-2xl">{minutesListened?.toPrecision(5)} minutes</p>
+									<p className="text-2xl">{minutesListened?.toPrecision(5) ?? "No minutes listened"} minutes</p>
 								)}
 
 								<h3 className="text-xl font-bold mt-4 mb-4">Listening Rank</h3>
