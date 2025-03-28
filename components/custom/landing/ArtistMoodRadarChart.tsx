@@ -1,7 +1,8 @@
+"use client";
 import React, { useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Legend, PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, Tooltip } from "recharts";
-import { useArtistImages } from "@/app/hooks/artist/useArtistImages";
+import { useArtistImages } from "@/hooks/artist/useArtistImages";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
@@ -79,7 +80,7 @@ const CustomLegend: React.FC<CustomLegendProps> = ({ payload, artistImages }) =>
 				<div key={index} className="flex items-center gap-2">
 					<div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
 					{artistImages[entry.value] ? (
-						<img src={artistImages[entry.value]!} alt={entry.value} className="w-8 h-8 rounded-full object-cover" />
+						<Image src={artistImages[entry.value]!} alt={entry.value} width={8} height={8} className="rounded-full object-cover" />
 					) : (
 						<div className="w-8 h-8 rounded-full bg-gray-200" />
 					)}

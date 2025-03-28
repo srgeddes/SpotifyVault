@@ -1,19 +1,15 @@
-"use client";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 import EnterVaultSection from "@/components/custom/landing/EnterVaultSection";
 import DiveDNASection from "@/components/custom/landing/DiveDNASection";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-export default function Home() {
-	const { data: session, status } = useSession();
-	const router = useRouter();
+export default async function Home() {
+	const session = await getServerSession(authOptions);
 
-	useEffect(() => {
-		if (status === "authenticated") {
-			router.push("/vault");
-		}
-	}, [status, router]);
+	if (session) {
+		redirect("/vault");
+	}
 
 	return (
 		<div className="flex flex-col items-center w-full min-h-screen justify-around space-y-14 pt-30">

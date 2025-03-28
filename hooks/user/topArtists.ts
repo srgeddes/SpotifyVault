@@ -1,15 +1,23 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
+export interface TopArtist {
+	id: string;
+	name: string;
+	images: { url: string }[];
+	genres: string[];
+	popularity: number;
+}
+
 interface TopArtistsHook {
-	topArtists: string[];
+	topArtists: TopArtist[];
 	loading: boolean;
 	error: Error | null;
 }
 
-export function TopArtist(timeRange: string = "long_term", limit: number = 3): TopArtistsHook {
+export function TopArtists(timeRange: string = "long_term", limit: number = 3): TopArtistsHook {
 	const { data: session } = useSession();
-	const [topArtists, setTopArtists] = useState<string[]>([]);
+	const [topArtists, setTopArtists] = useState<TopArtist[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<Error | null>(null);
 
@@ -17,7 +25,7 @@ export function TopArtist(timeRange: string = "long_term", limit: number = 3): T
 		if (!session) return;
 
 		setLoading(true);
-		fetch(`/api/spotify/user/top-artist?time_range=${timeRange}&limit=${limit}`)
+		fetch(`/api/spotify/user/top-artists?time_range=${timeRange}&limit=${limit}`)
 			.then((res) => {
 				if (!res.ok) throw new Error("Failed to fetch top artists");
 				return res.json();

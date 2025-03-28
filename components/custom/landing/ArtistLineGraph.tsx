@@ -4,8 +4,9 @@ import React, { useMemo, useState, useEffect } from "react";
 import { TrendingUp } from "lucide-react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useArtistImages } from "@/app/hooks/artist/useArtistImages";
+import { useArtistImages } from "@/hooks/artist/useArtistImages";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 
 const artistData = [
 	{ month: "Jan", Drake: 250, "Kendrick Lamar": 80, "Taylor Swift": 160 },
@@ -47,7 +48,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, a
 					return (
 						<div key={index} className="flex items-center gap-3 mt-2">
 							{artistImages[artist] ? (
-								<img src={artistImages[artist] as string} alt={artist} className="w-12 h-12 object-cover rounded-full" />
+								<Image src={artistImages[artist] as string} alt={artist} width={12} height={12} className="object-cover rounded-full" />
 							) : (
 								<div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">{artist.charAt(0)}</div>
 							)}

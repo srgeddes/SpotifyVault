@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "framer-motion";
 import ArtistMoodRadarChart from "./ArtistMoodRadarChart";
 import ArtistSharePieChart from "./ArtistSharePieChart";

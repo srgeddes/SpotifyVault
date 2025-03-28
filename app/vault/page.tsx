@@ -1,38 +1,28 @@
 "use client";
 
-import Home from "@/components/custom/vault/home";
-import { Button } from "@/components/ui/button";
+import Home from "@/components/custom/vault/home/home";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function VaultPage() {
 	const router = useRouter();
+	const { data: session, status } = useSession();
 
-	// useEffect(() => {
-	// 	if (status === "unauthenticated") {
-	// 		router.push("/");
-	// 	}
-	// }, [status, router]);
-
-	// useEffect(() => {
-	// 	localStorage.setItem("lastVisited", "/vault");
-	// }, []);
+	useEffect(() => {
+		if (status === "unauthenticated") {
+			router.push("/");
+		}
+	}, [status, router]);
 
 	return (
 		<div>
-			<SidebarTrigger className="ml-2 cursor-pointer" />
-			<Button
-				className="cursor-pointer"
-				onClick={() => {
-					signOut({ redirect: false }).then(() => {
-						router.push("/");
-					});
-				}}>
-				Logout
-			</Button>
-			<Home />
+			<SidebarTrigger className="cursor-pointer" />
+
+			<div className="mt-7">
+				<Home />
+			</div>
 		</div>
 	);
 }

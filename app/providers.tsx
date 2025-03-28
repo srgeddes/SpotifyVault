@@ -37,7 +37,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 	return (
 		<SessionProvider>
-			<ThemeProvider attribute="class" defaultTheme="system">
+			<ThemeProvider attribute="class" defaultTheme="light">
 				{!isContentLoaded ? <LoadingScreen /> : children}
 			</ThemeProvider>
 		</SessionProvider>

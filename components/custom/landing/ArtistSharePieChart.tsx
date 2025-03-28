@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useArtistImages } from "@/app/hooks/artist/useArtistImages";
+import { useArtistImages } from "@/hooks/artist/useArtistImages";
 import { motion } from "framer-motion";
 import Image from "next/image";
 const playData = [
@@ -27,7 +27,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, artistIm
 			<div className="bg-card p-4 rounded-md shadow-lg border border-border">
 				<div className="flex items-center gap-3">
 					{artistImages[artist] ? (
-						<img src={artistImages[artist] as string} alt={artist} className="w-12 h-12 object-cover rounded-full" />
+						<Image src={artistImages[artist] as string} alt={artist} width={12} height={12} className="object-cover rounded-full" />
 					) : (
 						<div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">{artist.charAt(0)}</div>
 					)}
@@ -59,7 +59,7 @@ const CustomLegend: React.FC<CustomLegendProps> = ({ payload, artistImages }) =>
 				<div key={index} className="flex items-center gap-3">
 					<div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
 					{artistImages[entry.value] ? (
-						<img src={artistImages[entry.value] as string} alt={entry.value} className="w-10 h-10 object-cover rounded-full" />
+						<Image src={artistImages[entry.value] as string} alt={entry.value} className="w-10 h-10 object-cover rounded-full" />
 					) : (
 						<div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">{entry.value.charAt(0)}</div>
 					)}
@@ -95,6 +95,23 @@ const ArtistSharePieChart: React.FC = () => {
 					className="motion-safe:transition-all"
 				/>
 			</motion.div>
+			<motion.div
+				className="absolute -top-30 right-0 z-0"
+				style={{ width: "275px", height: "275px" }}
+				initial={{ y: 30, opacity: 0 }}
+				animate={{ y: 0, opacity: 1 }}
+				transition={{ duration: 0.8, delay: 0.2 }}
+				whileHover={{ y: -15, scale: 1.05, transition: { duration: 0.4 } }}>
+				<Image
+					src="/images/landing/big_bruno.png"
+					alt="Rhiana"
+					layout="fill"
+					objectFit="contain"
+					objectPosition="center top"
+					className="motion-safe:transition-all"
+				/>
+			</motion.div>
+
 			<Card className="w-full h-full z-10 relative">
 				<CardHeader className="pb-0 mb-0">
 					<CardTitle>Artist Share of Plays</CardTitle>

@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
 
-	const spotifyApiUrl = `https://api.spotify.com/v1/me/top/artists?limit=${limit}&time_range=${time_range}`;
+	const spotifyApiUrl = `https://api.spotify.com/v1/me/top/tracks?limit=${limit}&time_range=${time_range}`;
 
 	const response = await fetch(spotifyApiUrl, {
 		headers: {
@@ -21,11 +21,20 @@ export async function GET(request: Request) {
 	});
 
 	if (!response.ok) {
-		return NextResponse.json({ error: "Failed to fetch top artists" }, { status: response.status });
+		return NextResponse.json({ error: "Failed to fetch top tracks" }, { status: response.status });
 	}
 
 	const data = await response.json();
-	const topArtists = data.items ? data.items.map((artist: any) => artist.name) : [];
+	const topTracks = data.items
+		? data.items.map((track: any) => ({
+				id: track.id,
+				name: track.name,
+				album: {
+					images: track.album.images,
+				},
+				external_urls: track.external_urls,
+		  }))
+		: [];
 
-	return NextResponse.json({ topArtists });
+	return NextResponse.json({ topTracks });
 }
