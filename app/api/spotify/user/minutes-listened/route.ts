@@ -1,7 +1,7 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { getTotalMinutesListened } from "@/services/dynamoService";
+import { authOptions } from "@/lib/authOptions";
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
@@ -16,7 +16,11 @@ export async function GET(request: Request) {
 	try {
 		const minutesListened = await getTotalMinutesListened(session.user, daysAgo);
 		return NextResponse.json({ minutesListened });
-	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 500 });
+	} catch (error: unknown) {
+		let message = "Unknown error";
+		if (error instanceof Error) {
+			message = error.message;
+		}
+		return NextResponse.json({ error: message }, { status: 500 });
 	}
 }

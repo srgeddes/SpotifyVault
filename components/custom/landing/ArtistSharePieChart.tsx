@@ -1,20 +1,26 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useArtistImages } from "@/hooks/artist/useArtistImages";
 import { motion } from "framer-motion";
 import Image from "next/image";
+
 const playData = [
 	{ name: "Bruno Mars", value: 45, color: "#5398BE" },
 	{ name: "Rihanna", value: 30, color: "#F2CD5D" },
 	{ name: "Ariana Grande", value: 25, color: "#C2847A" },
 ];
 
+interface PieTooltipPayloadItem {
+	name: string;
+	value: number;
+}
+
 interface CustomTooltipProps {
 	active?: boolean;
-	payload?: any[];
+	payload?: PieTooltipPayloadItem[];
 	artistImages: Record<string, string | null>;
 }
 
@@ -27,7 +33,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, artistIm
 			<div className="bg-card p-4 rounded-md shadow-lg border border-border">
 				<div className="flex items-center gap-3">
 					{artistImages[artist] ? (
-						<Image src={artistImages[artist] as string} alt={artist} width={12} height={12} className="object-cover rounded-full" />
+						<Image src={artistImages[artist] as string} alt={artist} width={50} height={50} className="object-cover rounded-full" />
 					) : (
 						<div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">{artist.charAt(0)}</div>
 					)}
@@ -43,34 +49,6 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, artistIm
 		);
 	}
 	return null;
-};
-
-interface CustomLegendProps {
-	payload?: any[];
-	artistImages: Record<string, string | null>;
-}
-
-const CustomLegend: React.FC<CustomLegendProps> = ({ payload, artistImages }) => {
-	if (!payload) return null;
-
-	return (
-		<div className="flex flex-col gap-3 mt-4">
-			{payload.map((entry, index) => (
-				<div key={index} className="flex items-center gap-3">
-					<div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
-					{artistImages[entry.value] ? (
-						<Image src={artistImages[entry.value] as string} alt={entry.value} className="w-10 h-10 object-cover rounded-full" />
-					) : (
-						<div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">{entry.value.charAt(0)}</div>
-					)}
-					<div>
-						<p className="text-sm font-medium">{entry.value}</p>
-						<p className="text-xs text-muted-foreground">{playData.find((item) => item.name === entry.value)?.value}% of plays</p>
-					</div>
-				</div>
-			))}
-		</div>
-	);
 };
 
 const ArtistSharePieChart: React.FC = () => {

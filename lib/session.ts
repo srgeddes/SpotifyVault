@@ -13,6 +13,6 @@ export function withSession(handler: NextApiHandler) {
 	return withIronSessionApiRoute(handler, sessionOptions);
 }
 
-export function withSessionSsr(handler: (context: GetServerSidePropsContext) => Promise<any>) {
+export function withSessionSsr<T>(handler: (context: GetServerSidePropsContext) => Promise<T>) {
 	return withIronSessionSsr(handler, sessionOptions);
 }

@@ -29,15 +29,19 @@ const baseArtistColors: Record<string, string> = {
 	Drake: "",
 };
 
-interface CustomTooltipProps {
-	active?: boolean;
-	payload?: any[];
-	label?: string;
-	artistImages: Record<string, string | null>;
-	drakeColor: string;
+interface CustomTooltipPayload {
+	value: number;
+	dataKey: string;
 }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, artistImages, drakeColor }) => {
+interface CustomTooltipProps {
+	active?: boolean;
+	payload?: CustomTooltipPayload[];
+	label?: string;
+	artistImages: Record<string, string | null>;
+}
+
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, artistImages }) => {
 	if (active && payload && payload.length) {
 		const sortedPayload = [...payload].sort((a, b) => b.value - a.value);
 		return (
@@ -48,7 +52,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, a
 					return (
 						<div key={index} className="flex items-center gap-3 mt-2">
 							{artistImages[artist] ? (
-								<Image src={artistImages[artist] as string} alt={artist} width={12} height={12} className="object-cover rounded-full" />
+								<Image src={artistImages[artist] as string} alt={artist} width={50} height={50} className="object-cover rounded-full" />
 							) : (
 								<div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">{artist.charAt(0)}</div>
 							)}
@@ -113,8 +117,12 @@ const ArtistLineGraph: React.FC<{ title?: string; description?: string }> = ({
 									style: { fill: "currentColor" },
 								}}
 							/>
-							<Tooltip content={<CustomTooltip artistImages={artistImages} drakeColor={drakeColor} />} />
-							<Legend />
+							<Tooltip content={<CustomTooltip artistImages={artistImages} />} />
+							<Legend
+								wrapperStyle={{
+									paddingTop: 20,
+								}}
+							/>{" "}
 							{artistNames.map((artist) => (
 								<Line
 									key={artist}

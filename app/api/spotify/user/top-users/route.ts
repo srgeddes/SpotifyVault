@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 import { getTopUsersByListeningMinutes } from "@/services/dynamoService";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -17,7 +17,11 @@ export async function GET(request: Request) {
 	try {
 		const topUsers = await getTopUsersByListeningMinutes(daysAgo, numUsers);
 		return NextResponse.json({ topUsers });
-	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 500 });
+	} catch (error: unknown) {
+		let message = "Unknown error";
+		if (error instanceof Error) {
+			message = error.message;
+		}
+		return NextResponse.json({ error: message }, { status: 500 });
 	}
 }

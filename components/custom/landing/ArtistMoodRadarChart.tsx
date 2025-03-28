@@ -35,9 +35,19 @@ const getMoodDescription = (value: number): string => {
 	return "Somber";
 };
 
+interface ChartPayload {
+	color: string;
+	name: string;
+	value: number;
+	payload: {
+		timeOfDay: string;
+		[artist: string]: number | string;
+	};
+}
+
 interface CustomTooltipProps {
 	active?: boolean;
-	payload?: any[];
+	payload?: ChartPayload[];
 	label?: string;
 }
 
@@ -66,8 +76,13 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label })
 	return null;
 };
 
+interface LegendPayload {
+	color: string;
+	value: string;
+}
+
 interface CustomLegendProps {
-	payload?: any[];
+	payload?: LegendPayload[];
 	artistImages: ArtistImages;
 }
 
@@ -80,7 +95,7 @@ const CustomLegend: React.FC<CustomLegendProps> = ({ payload, artistImages }) =>
 				<div key={index} className="flex items-center gap-2">
 					<div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
 					{artistImages[entry.value] ? (
-						<Image src={artistImages[entry.value]!} alt={entry.value} width={8} height={8} className="rounded-full object-cover" />
+						<Image src={artistImages[entry.value]!} alt={entry.value} width={35} height={35} className="rounded-full object-cover" />
 					) : (
 						<div className="w-8 h-8 rounded-full bg-gray-200" />
 					)}

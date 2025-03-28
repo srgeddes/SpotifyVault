@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { scanUsers } from "@/services/dynamoService";
 import { updateUserSpotifyData } from "@/services/spotifyService";
 
-export async function GET(request: Request) {
+export async function GET() {
 	try {
 		const users = await scanUsers();
 

@@ -49,7 +49,7 @@ export default function NavBar() {
 
 					<MenubarMenu>
 						<motion.div whileHover={{ scale: 1.05 }}>
-							<MenubarTrigger className="text-base font-medium cursor-pointer">Features</MenubarTrigger>
+							<MenubarTrigger className="text-base font-medium cursor-pointer mr-2">Features</MenubarTrigger>
 						</motion.div>
 						<MenubarContent>
 							<MenubarItem className="cursor-pointer">Feature 1</MenubarItem>
@@ -58,20 +58,15 @@ export default function NavBar() {
 						</MenubarContent>
 					</MenubarMenu>
 
-					<MenubarMenu>
-						<motion.div whileHover={{ scale: 1.05 }}>
-							<MenubarTrigger className="text-base font-medium cursor-pointer">About Us</MenubarTrigger>
-						</motion.div>
-						<MenubarContent>
-							<MenubarItem className="cursor-pointer">Plans</MenubarItem>
-							<MenubarItem className="cursor-pointer">Enterprise</MenubarItem>
-							<MenubarItem className="cursor-pointer">Compare</MenubarItem>
-						</MenubarContent>
-					</MenubarMenu>
+					<motion.div whileHover={{ scale: 1.05 }}>
+						<Link href={"https://rileygeddes.com"} target="_blank" className="text-base font-medium cursor-pointer">
+							About
+						</Link>{" "}
+					</motion.div>
 
 					<motion.div whileHover={{ scale: 1.05 }}>
 						<Link href="/contact" className="text-base font-medium px-4 py-2 flex items-center cursor-pointer">
-							Get in contact
+							Contact
 						</Link>
 					</motion.div>
 

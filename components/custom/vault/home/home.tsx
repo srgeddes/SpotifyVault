@@ -11,13 +11,13 @@ import { useUndergroundScore } from "@/hooks/user/underground-score";
 import CardLoader from "../../CardLoader";
 import { SpotifyLink } from "../../SpotifyLink";
 
-export default function SpotifyVaultCard() {
+export default function Home() {
 	const { data: session } = useSession();
 	const { topArtists, loading: artistsLoading, error: artistsError } = TopArtists("long_term", 5);
 	const { topTracks, loading: tracksLoading, error: tracksError } = TopTracks("long_term", 5);
 	const { minutesListened, loading: minutesLoading, error: minutesError } = useMinutesListened(10000);
-	const { percentileData, loading: percentilLoading, error: percentileError } = useListeningPercentile(10000);
-	const { undergroundScore, loading: undergroundScoreLoading, error: undergroundScoreError } = useUndergroundScore();
+	const { percentileData, error: percentileError } = useListeningPercentile(10000);
+	const { undergroundScore, error: undergroundScoreError } = useUndergroundScore();
 
 	if (artistsError || tracksError) {
 		return (
@@ -64,14 +64,16 @@ export default function SpotifyVaultCard() {
 								) : (
 									<p className="text-2xl">{minutesListened?.toPrecision(5)} minutes</p>
 								)}
+
 								<h3 className="text-xl font-bold mt-4 mb-4">Listening Rank</h3>
-								{minutesError ? (
+								{percentileError ? (
 									<p className="text-muted-foreground">Error loading listening Percentile</p>
 								) : (
 									<p className="text-2xl">{percentileData?.rank}</p>
 								)}
+
 								<h3 className="text-xl font-bold mt-4 mb-4">Underground Score</h3>
-								{minutesError ? (
+								{undergroundScoreError ? (
 									<p className="text-muted-foreground">Error loading Underground Score</p>
 								) : (
 									<p className="text-2xl">{undergroundScore.toPrecision(2)}</p>

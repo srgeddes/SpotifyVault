@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import EnterVaultSection from "@/components/custom/landing/EnterVaultSection";
 import DiveDNASection from "@/components/custom/landing/DiveDNASection";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 
 export default async function Home() {
 	const session = await getServerSession(authOptions);

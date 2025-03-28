@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { format, addDays } from "date-fns";
+import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTrackPlays } from "@/hooks/user/track-plays";
@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 interface CustomTooltipProps {
 	active?: boolean;
-	payload?: any[];
+	payload?: { name: string; value: number }[];
 	label?: string;
 	aggregation: string;
 }
@@ -176,15 +176,34 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent className="w-auto p-0">
-							<Calendar initialFocus mode="range" defaultMonth={dateRange.from} selected={dateRange} onSelect={setDateRange} numberOfMonths={2} />
+							<Calendar
+								initialFocus
+								mode="range"
+								defaultMonth={dateRange.from}
+								selected={dateRange}
+								onSelect={(range) => {
+									if (!range?.from) return;
+
+									if (!range.to) {
+										const dayStart = new Date(range.from);
+										dayStart.setHours(0, 0, 0, 0);
+										const dayEnd = new Date(range.from);
+										dayEnd.setHours(23, 59, 59, 999);
+										setDateRange({ from: dayStart, to: dayEnd });
+									} else {
+										setDateRange(range);
+									}
+								}}
+								numberOfMonths={2}
+							/>
 						</PopoverContent>
 					</Popover>
 				)}
 			</div>
 
 			<CardHeader>
-				<CardTitle>Daily Song Plays</CardTitle>
-				<CardDescription>Number of songs played each day</CardDescription>
+				<CardTitle>{chartName}</CardTitle>
+				<CardDescription>Number of songs played each day/week/month/year</CardDescription>
 			</CardHeader>
 
 			<CardContent>

@@ -1,6 +1,15 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+
+interface SpotifyTrack {
+	id: string;
+	name: string;
+	album: {
+		images: { url: string }[];
+	};
+	external_urls: Record<string, string>;
+}
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
@@ -25,8 +34,8 @@ export async function GET(request: Request) {
 	}
 
 	const data = await response.json();
-	const topTracks = data.items
-		? data.items.map((track: any) => ({
+	const topTracks: SpotifyTrack[] = data.items
+		? data.items.map((track: SpotifyTrack) => ({
 				id: track.id,
 				name: track.name,
 				album: {

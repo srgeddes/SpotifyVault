@@ -65,7 +65,7 @@ export default function EnterVaultSection() {
 				<div className="absolute z-0 overflow-visible hidden md:block" style={{ left: "25%", top: "-25px", transform: "translateX(-50%)" }}>
 					<motion.div
 						className="relative"
-						style={{ width: "325px", height: "425px" }}
+						style={{ width: "375px", height: "475px" }}
 						initial={{ y: 30, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
 						transition={{ duration: 0.8, delay: 0.2 }}
@@ -81,10 +81,10 @@ export default function EnterVaultSection() {
 					</motion.div>
 				</div>
 
-				<div className="absolute z-0 overflow-visible" style={{ left: "50%", top: "-25px", transform: "translateX(-50%)" }}>
+				<div className="absolute z-0 overflow-visible" style={{ left: "50%", top: "-40px", transform: "translateX(-50%)" }}>
 					<motion.div
 						className="relative"
-						style={{ width: "325px", height: "425px" }}
+						style={{ width: "375px", height: "475px" }}
 						initial={{ y: 30, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
 						transition={{ duration: 0.8, delay: 0.4 }}
@@ -100,10 +100,10 @@ export default function EnterVaultSection() {
 					</motion.div>
 				</div>
 
-				<div className="absolute z-0 overflow-visible hidden md:block" style={{ left: "75%", top: "-30px", transform: "translateX(-70%)" }}>
+				<div className="absolute z-0 overflow-visible hidden md:block" style={{ left: "80%", top: "-30px", transform: "translateX(-70%)" }}>
 					<motion.div
 						className="relative"
-						style={{ width: "300px", height: "400px" }}
+						style={{ width: "350px", height: "450px" }}
 						initial={{ y: 30, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
 						transition={{ duration: 0.8, delay: 0.6 }}

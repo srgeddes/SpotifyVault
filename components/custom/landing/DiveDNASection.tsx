@@ -5,8 +5,8 @@ import ArtistSharePieChart from "./ArtistSharePieChart";
 
 export default function DiveDNASection() {
 	return (
-		<div className="w-5/6 max-w-8xl mx-auto relative">
-			<div className="w-full mt-20 text-left px-6">
+		<div className="w-5/6 max-w-8xl mx-auto relative min-h-screen">
+			<div className="w-full mt-20 text-left px-6 py-10">
 				<motion.h1
 					className="text-5xl font-bold"
 					initial={{ clipPath: "inset(0% 100% -10% 0%)" }}
@@ -15,7 +15,7 @@ export default function DiveDNASection() {
 					Dive Into Your Musical DNA{" "}
 				</motion.h1>
 				<motion.p
-					className="text-xl mt-4 text-gray-600 dark:text-gray-300 mb-35"
+					className="text-xl mt-4 text-gray-600 dark:text-gray-300 mb-16"
 					initial={{ clipPath: "inset(0% 100% 0% 0%)" }}
 					animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
 					transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}>
@@ -23,7 +23,7 @@ export default function DiveDNASection() {
 				</motion.p>
 			</div>
 
-			<div className="w-full mt-8 px-6 flex flex-row gap-6">
+			<div className="w-full mt-20 px-6 flex flex-row gap-6">
 				<div className="w-1/2">
 					<ArtistMoodRadarChart />
 				</div>

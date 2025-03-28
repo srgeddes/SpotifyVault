@@ -1,7 +1,7 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { getUserListeningMinutesPercentile } from "@/services/dynamoService";
+import { authOptions } from "@/lib/authOptions";
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 	try {
 		const percentileData = await getUserListeningMinutesPercentile(session.user, daysAgo);
 		return NextResponse.json({ percentileData });
-	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 500 });
+	} catch (error) {
+		return NextResponse.json({ error: error?.message }, { status: 500 });
 	}
 }

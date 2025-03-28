@@ -1,5 +1,5 @@
 "use client";
-import { ChevronDown, ChevronUp, Guitar, Headphones, Home, Inbox, Lock, LogOut, MicVocal, UserRound } from "lucide-react";
+import { ChevronDown, Guitar, Headphones, Home, Lock, LogOut, MicVocal, UserRound } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

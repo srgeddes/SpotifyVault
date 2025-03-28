@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { getAllTrackPlays } from "@/services/dynamoService";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 
-export async function GET(request: Request) {
+export async function GET() {
 	const session = await getServerSession(authOptions);
 	if (!session || !session.user) {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -11,7 +11,11 @@ export async function GET(request: Request) {
 	try {
 		const trackPlays = await getAllTrackPlays(session?.user);
 		return NextResponse.json(trackPlays);
-	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 500 });
+	} catch (error: unknown) {
+		let message = "Unknown error";
+		if (error instanceof Error) {
+			message = error.message;
+		}
+		return NextResponse.json({ error: message }, { status: 500 });
 	}
 }

@@ -48,12 +48,12 @@ export default function Footer() {
 						</motion.div>
 						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
 							<Link href="/about" className="text-black dark:text-white">
-								About Us
+								About
 							</Link>
 						</motion.div>
 						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
 							<Link href="/services" className="text-black dark:text-white">
-								Services
+								Contact
 							</Link>
 						</motion.div>
 

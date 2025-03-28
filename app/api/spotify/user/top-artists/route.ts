@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
+
+interface SpotifyArtist {
+	id: string;
+	name: string;
+	images: { url: string }[];
+	genres: string[];
+	popularity: number;
+	external_urls: Record<string, string>;
+}
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
@@ -27,7 +36,7 @@ export async function GET(request: Request) {
 	const data = await response.json();
 
 	const topArtists = data.items
-		? data.items.map((artist: any) => ({
+		? data.items.map((artist: SpotifyArtist) => ({
 				id: artist.id,
 				name: artist.name,
 				images: artist.images,
