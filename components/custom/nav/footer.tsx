@@ -67,7 +67,7 @@ export default function Footer() {
 
 				<div className="mt-4">
 					<p className="text-center text-black dark:text-neutral-400">© {currentYear} SpotifyVault. All rights reserved.</p>
-					<p className="text-center text-black/50 dark:text-neutral-400 text-sm mt-2"> This site has no affiliation with Spotify</p>
+					<p className="text-center text-black/50 dark:text-neutral-400 text-sm mt-2">This site has no affiliation with Spotify</p>
 				</div>
 			</div>
 		</footer>

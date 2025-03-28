@@ -86,10 +86,10 @@ export const authOptions: NextAuthOptions = {
 		async signIn({ user, account, profile }): Promise<boolean> {
 			const spotifyProfile = profile as SpotifyProfile | null;
 			const userId = spotifyProfile?.id || user?.id;
-			if (!userId) {
-				console.error("No user id found in signIn callback");
-				return false;
-			}
+			// if (!userId) {
+			// 	console.error("No user id found in signIn callback");
+			// 	return false;
+			// }
 
 			const newUser = {
 				id: userId,
