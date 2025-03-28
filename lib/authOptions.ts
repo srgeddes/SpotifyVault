@@ -101,12 +101,12 @@ export const authOptions: NextAuthOptions = {
 				updatedAt: new Date().toISOString(),
 			};
 
-			try {
-				await upsertUser(newUser);
-			} catch (err) {
-				console.error("Error saving/updating user in DynamoDB: ", err);
-				return false;
-			}
+			// try {
+			// 	await upsertUser(newUser);
+			// } catch (err) {
+			// 	console.error("Error saving/updating user in DynamoDB: ", err);
+			// 	return false;
+			// }
 			return true;
 		},
 
