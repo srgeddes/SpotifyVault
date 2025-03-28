@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import SpotifyProvider from "next-auth/providers/spotify";
-import { upsertUser } from "@/services/dynamoService";
+// import { upsertUser } from "@/services/dynamoService";
 
 interface SpotifyProfile {
 	id: string;
@@ -83,7 +83,7 @@ export const authOptions: NextAuthOptions = {
 		}),
 	],
 	callbacks: {
-		async signIn({ user, account, profile }): Promise<boolean> {
+		async signIn({ user, profile }): Promise<boolean> {
 			const spotifyProfile = profile as SpotifyProfile | null;
 			const userId = spotifyProfile?.id || user?.id;
 			if (!userId) {
@@ -91,15 +91,15 @@ export const authOptions: NextAuthOptions = {
 				return false;
 			}
 
-			const newUser = {
-				id: userId,
-				spotifyId: spotifyProfile?.id || userId,
-				email: spotifyProfile?.email || "",
-				displayName: spotifyProfile?.display_name || "",
-				refreshToken: account?.refresh_token || "",
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString(),
-			};
+			// const newUser = {
+			// 	id: userId,
+			// 	spotifyId: spotifyProfile?.id || userId,
+			// 	email: spotifyProfile?.email || "",
+			// 	displayName: spotifyProfile?.display_name || "",
+			// 	refreshToken: account?.refresh_token || "",
+			// 	createdAt: new Date().toISOString(),
+			// 	updatedAt: new Date().toISOString(),
+			// };
 
 			// try {
 			// 	await upsertUser(newUser);
