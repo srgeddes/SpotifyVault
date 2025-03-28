@@ -3,7 +3,7 @@ import { DynamoDBDocumentClient, QueryCommand, PutCommand, ScanCommand, GetComma
 
 const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(client);
-const TABLE_NAME = process.env.DYNAMODB_TABLE!;
+const SPOTIFY_ACTIVITY_TABLE = process.env.DYNAMODB_SPOTIFY_ACTIVITY_TABLE!;
 const TRACK_METADATA_TABLE = process.env.DYNAMODB_TRACK_METADATA_TABLE!;
 const ARTIST_METADATA_TABLE = process.env.DYNAMODB_ARTIST_METADATA_TABLE!;
 
@@ -19,7 +19,7 @@ export interface User {
 
 export async function upsertUser(user: User): Promise<void> {
 	const params = {
-		TableName: TABLE_NAME,
+		TableName: SPOTIFY_ACTIVITY_TABLE,
 		Key: {
 			PK: `USER#${user.id}`,
 			SK: "METADATA",
@@ -40,7 +40,7 @@ export async function upsertUser(user: User): Promise<void> {
 }
 export async function scanUsers(): Promise<User[]> {
 	const params = {
-		TableName: TABLE_NAME,
+		TableName: SPOTIFY_ACTIVITY_TABLE,
 		FilterExpression: "#sk = :meta",
 		ExpressionAttributeNames: { "#sk": "SK" },
 		ExpressionAttributeValues: { ":meta": "METADATA" },
@@ -76,7 +76,7 @@ export async function saveTrackPlay(trackPlay: TrackPlay): Promise<void> {
 
 	await ddbDocClient.send(
 		new PutCommand({
-			TableName: TABLE_NAME,
+			TableName: SPOTIFY_ACTIVITY_TABLE,
 			Item: item,
 			ConditionExpression: "attribute_not_exists(SK)",
 		})
@@ -101,7 +101,7 @@ export async function saveSavedTrack(savedTrack: SavedTrack): Promise<void> {
 
 	await ddbDocClient.send(
 		new PutCommand({
-			TableName: TABLE_NAME,
+			TableName: SPOTIFY_ACTIVITY_TABLE,
 			Item: item,
 			ConditionExpression: "attribute_not_exists(SK)",
 		})
@@ -126,7 +126,7 @@ export async function saveArtistFollow(artistFollow: ArtistFollow): Promise<void
 
 	await ddbDocClient.send(
 		new PutCommand({
-			TableName: TABLE_NAME,
+			TableName: SPOTIFY_ACTIVITY_TABLE,
 			Item: item,
 			ConditionExpression: "attribute_not_exists(SK)",
 		})
@@ -151,7 +151,7 @@ export async function savePlaylistPlay(playlistPlay: PlaylistPlay): Promise<void
 
 	await ddbDocClient.send(
 		new PutCommand({
-			TableName: TABLE_NAME,
+			TableName: SPOTIFY_ACTIVITY_TABLE,
 			Item: item,
 			ConditionExpression: "attribute_not_exists(SK)",
 		})
@@ -178,7 +178,7 @@ export async function savePlaylistTrack(playlistTrack: PlaylistTrack): Promise<v
 
 	await ddbDocClient.send(
 		new PutCommand({
-			TableName: TABLE_NAME,
+			TableName: SPOTIFY_ACTIVITY_TABLE,
 			Item: item,
 			ConditionExpression: "attribute_not_exists(SK)",
 		})
@@ -213,7 +213,7 @@ export async function savePlaylist(playlist: Playlist): Promise<void> {
 
 	await ddbDocClient.send(
 		new PutCommand({
-			TableName: TABLE_NAME,
+			TableName: SPOTIFY_ACTIVITY_TABLE,
 			Item: item,
 			ConditionExpression: "attribute_not_exists(SK)",
 		})
@@ -222,7 +222,7 @@ export async function savePlaylist(playlist: Playlist): Promise<void> {
 
 export async function getAllTrackPlays(user: any): Promise<TrackPlay[]> {
 	const params = {
-		TableName: TABLE_NAME,
+		TableName: SPOTIFY_ACTIVITY_TABLE,
 		KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
 		ExpressionAttributeValues: {
 			":pk": `USER#${user.id}`,
@@ -246,7 +246,7 @@ export async function getTotalMinutesListened(user: { id: string }, daysAgo: num
 	const thresholdISO = threshold.toISOString();
 
 	const params = {
-		TableName: TABLE_NAME,
+		TableName: SPOTIFY_ACTIVITY_TABLE,
 		KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
 		FilterExpression: "playedAt >= :threshold",
 		ExpressionAttributeValues: {
