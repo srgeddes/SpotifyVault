@@ -1,5 +1,6 @@
-import { withIronSessionApiRoute, withIronSessionSsr, IronSessionOptions } from "iron-session/next";
-import { NextApiHandler, GetServerSidePropsContext } from "next";
+import { withIronSessionSsr } from "iron-session/next";
+import type { IronSessionOptions } from "iron-session";
+import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 
 export const sessionOptions: IronSessionOptions = {
 	password: process.env.SESSION_SECRET || "complex_password_at_least_32_characters_long",
@@ -9,10 +10,8 @@ export const sessionOptions: IronSessionOptions = {
 	},
 };
 
-export function withSession(handler: NextApiHandler) {
-	return withIronSessionApiRoute(handler, sessionOptions);
-}
-
-export function withSessionSsr<T>(handler: (context: GetServerSidePropsContext) => Promise<T>) {
+export function withSessionSsr<P extends Record<string, unknown> = Record<string, unknown>>(
+	handler: (context: GetServerSidePropsContext) => Promise<GetServerSidePropsResult<P>>
+) {
 	return withIronSessionSsr(handler, sessionOptions);
 }

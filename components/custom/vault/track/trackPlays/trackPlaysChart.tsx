@@ -65,7 +65,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 	const { resolvedTheme } = useTheme();
 
 	const [timePeriod, setTimePeriod] = useState("all");
-	const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
+	const [dateRange, setDateRange] = useState<{ from: Date | null; to: Date | null }>({ from: null, to: null });
 
 	const [aggregation, setAggregation] = useState("day");
 
@@ -121,7 +121,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 					onValueChange={(value) => {
 						setTimePeriod(value);
 						if (value === "all") {
-							setDateRange({});
+							setDateRange({ from: null, to: null });
 						}
 					}}>
 					<SelectTrigger className="w-[140px] border rounded p-1 text-sm cursor-pointer text-center">
@@ -179,8 +179,14 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 							<Calendar
 								initialFocus
 								mode="range"
-								defaultMonth={dateRange.from}
-								selected={dateRange}
+								defaultMonth={dateRange.from || undefined}
+								selected={
+									dateRange.from
+										? dateRange.to
+											? { from: dateRange.from, to: dateRange.to }
+											: { from: dateRange.from, to: dateRange.from }
+										: undefined
+								}
 								onSelect={(range) => {
 									if (!range?.from) return;
 
@@ -191,7 +197,10 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 										dayEnd.setHours(23, 59, 59, 999);
 										setDateRange({ from: dayStart, to: dayEnd });
 									} else {
-										setDateRange(range);
+										setDateRange({
+											from: range.from ?? null,
+											to: range.to ?? null,
+										});
 									}
 								}}
 								numberOfMonths={2}

@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { getTotalMinutesListened } from "@/services/dynamoService";
-import { authOptions } from "@/lib/authOptions";
+import { authOptions, MySession } from "@/lib/authOptions";
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
@@ -14,7 +14,9 @@ export async function GET(request: Request) {
 	}
 
 	try {
-		const minutesListened = await getTotalMinutesListened(session.user, daysAgo);
+		const mySession = session as MySession;
+		const userForMinutes = { id: mySession.user.id };
+		const minutesListened = await getTotalMinutesListened(userForMinutes, daysAgo);
 		return NextResponse.json({ minutesListened });
 	} catch (error: unknown) {
 		let message = "Unknown error";

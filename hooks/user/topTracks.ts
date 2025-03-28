@@ -7,6 +7,9 @@ export interface TopTrack {
 	album: {
 		images: { url: string }[];
 	};
+	external_urls: {
+		spotify: string;
+	};
 }
 
 interface TopTracksHook {

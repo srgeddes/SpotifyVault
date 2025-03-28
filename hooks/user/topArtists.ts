@@ -7,6 +7,9 @@ export interface TopArtist {
 	images: { url: string }[];
 	genres: string[];
 	popularity: number;
+	external_urls: {
+		spotify: string;
+	};
 }
 
 interface TopArtistsHook {

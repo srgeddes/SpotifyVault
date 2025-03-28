@@ -118,7 +118,7 @@ export default function Home() {
 														className="transition-transform duration-300 hover:scale-110"
 													/>
 												</div>
-												<SpotifyLink id={track.id} externalUrl={track.external_urls.spotify} type="track" className="truncate max-w-[200px]">
+												<SpotifyLink id={track.id} externalUrl={track.external_urls.spotify} type="track">
 													{track.name}
 												</SpotifyLink>
 											</div>

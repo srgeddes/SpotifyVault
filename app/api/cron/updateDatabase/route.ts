@@ -1,4 +1,3 @@
-// app/api/cron/updateDatabase/route.ts
 import { NextResponse } from "next/server";
 import { scanUsers } from "@/services/dynamoService";
 import { updateUserSpotifyData } from "@/services/spotifyService";

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/authOptions";
+import { authOptions, MySession } from "@/lib/authOptions";
 
 interface SpotifyArtist {
 	id: string;
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 	const time_range = searchParams.get("time_range") || "long_term";
 	const limit = searchParams.get("limit") || "3";
 
-	const session = await getServerSession(authOptions);
+	const session = (await getServerSession(authOptions)) as MySession | null;
 	if (!session || !session.accessToken) {
 		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}

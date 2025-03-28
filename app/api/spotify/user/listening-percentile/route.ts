@@ -2,6 +2,8 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { getUserListeningMinutesPercentile } from "@/services/dynamoService";
 import { authOptions } from "@/lib/authOptions";
+import type { User } from "@/services/dynamoService";
+import type { MySession } from "@/lib/authOptions";
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
@@ -14,9 +16,24 @@ export async function GET(request: Request) {
 	}
 
 	try {
-		const percentileData = await getUserListeningMinutesPercentile(session.user, daysAgo);
+		const mySession = session as MySession;
+		const fullUser: User = {
+			id: mySession.user.id,
+			spotifyId: mySession.user.id,
+			email: mySession.user.email || "",
+			displayName: mySession.user.name || "",
+			refreshToken: "",
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString(),
+		};
+
+		const percentileData = await getUserListeningMinutesPercentile(fullUser, daysAgo);
 		return NextResponse.json({ percentileData });
-	} catch (error) {
-		return NextResponse.json({ error: error?.message }, { status: 500 });
+	} catch (error: unknown) {
+		let message = "Unknown error";
+		if (error instanceof Error) {
+			message = error.message;
+		}
+		return NextResponse.json({ error: message }, { status: 500 });
 	}
 }
