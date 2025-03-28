@@ -76,7 +76,7 @@ export default function Home() {
 								{undergroundScoreError ? (
 									<p className="text-muted-foreground">Error loading Underground Score</p>
 								) : (
-									<p className="text-2xl">{undergroundScore.toPrecision(2)}</p>
+									<p className="text-2xl">{undergroundScore?.toPrecision(2) ?? "No underground score"}</p>
 								)}
 							</div>
 
