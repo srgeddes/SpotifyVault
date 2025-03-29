@@ -76,7 +76,7 @@ export const TrackPlaysChartThumbnail: React.FC<TrackPlaysChartThumbnailProps> =
 								tick={false}
 								domain={[0, (dataMax: number) => dataMax + 10]}
 								label={{
-									value: "Song Plays",
+									value: "Track Plays",
 									angle: -90,
 									position: "insideLeft",
 									offset: 30,

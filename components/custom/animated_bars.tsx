@@ -1,3 +1,5 @@
+"use client";
+import { useTheme } from "next-themes";
 import React from "react";
 import styled from "styled-components";
 
@@ -7,9 +9,12 @@ interface AnimatedBarsProps {
 	scale?: number;
 }
 
-const AnimatedBars: React.FC<AnimatedBarsProps> = ({ barwidth = 2, barcolor = "white", scale = 1 }) => {
+const AnimatedBars: React.FC<AnimatedBarsProps> = ({ barwidth = 2, scale = 1 }) => {
+	const { resolvedTheme } = useTheme();
+	const barColor = resolvedTheme === "dark" ? "white" : "black";
+
 	return (
-		<StyledBars barwidth={barwidth} barcolor={barcolor} scale={scale}>
+		<StyledBars barwidth={barwidth} barcolor={barColor} scale={scale}>
 			<div className="loading">
 				<div className="load"></div>
 				<div className="load"></div>

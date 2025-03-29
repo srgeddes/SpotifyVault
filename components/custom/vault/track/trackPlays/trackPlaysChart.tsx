@@ -17,9 +17,10 @@ interface CustomTooltipProps {
 	payload?: { name: string; value: number }[];
 	label?: string;
 	aggregation: string;
+	dataType: "plays" | "minutes";
 }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, aggregation }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, aggregation, dataType }) => {
 	if (active && payload && payload.length) {
 		return (
 			<div className="bg-background/95 backdrop-blur-sm p-4 rounded-md shadow-lg border border-border ml-2">
@@ -40,9 +41,9 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, a
 				</p>{" "}
 				<div className="flex items-center gap-3 mt-2">
 					<div>
-						<p className="font-medium">Songs Played</p>
+						<p className="font-medium">{dataType === "plays" ? "Tracks Played" : "Minutes Played"}</p>
 						<p className="text-sm">
-							<span className="font-semibold">{payload[0].value}</span> songs
+							<span className="font-semibold">{dataType === "minutes" ? Number(payload[0].value).toFixed(2) : payload[0].value}</span>{" "}
 						</p>
 					</div>
 				</div>
@@ -63,13 +64,11 @@ function getWeekNumber(date: Date) {
 export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) => {
 	const { trackPlays, isLoading, isError } = useTrackPlays();
 	const { resolvedTheme } = useTheme();
-
 	const [timePeriod, setTimePeriod] = useState("all");
 	const [dateRange, setDateRange] = useState<{ from: Date | null; to: Date | null }>({ from: null, to: null });
-
 	const [aggregation, setAggregation] = useState("day");
-
 	const [lineColor, setLineColor] = useState(resolvedTheme === "dark" ? "#ffffff" : "#000000");
+	const [dataType, setDataType] = useState<"plays" | "minutes">("plays");
 
 	useEffect(() => {
 		setLineColor(resolvedTheme === "dark" ? "#ffffff" : "#000000");
@@ -97,10 +96,16 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 			} else if (aggregation === "year") {
 				dateKey = format(dateObj, "yyyy");
 			}
-			acc[dateKey] = (acc[dateKey] || 0) + 1;
+
+			if (dataType === "plays") {
+				acc[dateKey] = (acc[dateKey] || 0) + 1;
+			} else {
+				const minutesPlayed = play.durationMs ? play.durationMs / 60000 : 0;
+				acc[dateKey] = (acc[dateKey] || 0) + minutesPlayed;
+			}
 			return acc;
 		}, {});
-	}, [trackPlays, timePeriod, dateRange, aggregation]);
+	}, [trackPlays, timePeriod, dateRange, aggregation, dataType]);
 
 	const chartData = useMemo(() => {
 		return Object.entries(groupedData)
@@ -112,11 +117,11 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 	if (isError) return <div>Error loading track plays</div>;
 	if (!trackPlays || trackPlays.length === 0) return <div>No track plays data available</div>;
 
-	const totalSongs = chartData.reduce((sum, item) => sum + item.songs, 0);
-	const averageSongsPerDay = Math.round(totalSongs / chartData.length);
 	const tickInterval = chartData.length > 60 ? Math.floor(chartData.length / 30) : 0;
 	const maxSongs = chartData.reduce((max, item) => Math.max(max, item.songs), 0);
 	const yAxisUpperBound = Math.ceil(maxSongs / 10) * 10;
+	const totalValue = chartData.reduce((sum, item) => sum + item.songs, 0);
+	const averageValue = Math.round(totalValue / chartData.length);
 
 	const tickStep = 5;
 	const ticks = [];
@@ -165,6 +170,16 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 						<SelectItem value="year" className="cursor-pointer text-center">
 							Year
 						</SelectItem>
+					</SelectContent>
+				</Select>
+
+				<Select value={dataType} onValueChange={(value) => setDataType(value as "plays" | "minutes")}>
+					<SelectTrigger className="w-[100px] border rounded p-1 text-sm cursor-pointer text-center">
+						<SelectValue placeholder="Data Type" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="plays">Plays</SelectItem>
+						<SelectItem value="minutes">Minutes</SelectItem>
 					</SelectContent>
 				</Select>
 
@@ -223,7 +238,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 
 			<CardHeader>
 				<CardTitle>{chartName}</CardTitle>
-				<CardDescription>Number of songs played each day/week/month/year</CardDescription>
+				<CardDescription>Number of tracks played or minutes listened</CardDescription>
 			</CardHeader>
 
 			<CardContent>
@@ -263,7 +278,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 								domain={[0, yAxisUpperBound]}
 								ticks={ticks}
 								label={{
-									value: "Songs Played",
+									value: dataType === "plays" ? "Tracks Played" : "Minutes Listened",
 									angle: -90,
 									position: "insideLeft",
 									offset: -5,
@@ -271,7 +286,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 									style: { fill: lineColor },
 								}}
 							/>
-							<Tooltip content={<CustomTooltip aggregation={aggregation} />} />
+							<Tooltip content={<CustomTooltip aggregation={aggregation} dataType={dataType} />} />{" "}
 							<Legend
 								wrapperStyle={{
 									paddingTop: 40,
@@ -293,9 +308,9 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 
 			<CardFooter>
 				<div className="text-sm">
-					Average of {averageSongsPerDay} songs per{" "}
+					Average of {averageValue} {dataType === "plays" ? "songs" : "minutes"} per{" "}
 					{aggregation === "day" ? "day" : aggregation === "week" ? "week" : aggregation === "month" ? "month" : "year"}
-				</div>{" "}
+				</div>
 			</CardFooter>
 		</Card>
 	);

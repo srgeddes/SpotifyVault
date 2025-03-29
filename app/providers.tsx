@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ThemeProvider, useTheme } from "next-themes";
+import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
 import AnimatedBars from "@/components/custom/animated_bars";
 
 function LoadingScreen() {
-	const { resolvedTheme } = useTheme();
-
 	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => {
@@ -18,11 +16,9 @@ function LoadingScreen() {
 		return null;
 	}
 
-	const barColor = resolvedTheme === "dark" ? "white" : "black";
-
 	return (
 		<div className="fixed inset-0 flex items-center justify-center bg-gray-100 dark:bg-neutral-950">
-			<AnimatedBars scale={5} barcolor={barColor} />
+			<AnimatedBars scale={5} />
 		</div>
 	);
 }

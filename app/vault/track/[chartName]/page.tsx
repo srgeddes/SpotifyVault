@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
+import { TrackDurationHistogramChart } from "@/components/custom/vault/track/trackDurationHistogram/trackDurationHistogramChart";
+import TrackPlaysChart from "@/components/custom/vault/track/trackPlays/trackPlaysChart";
 import { useParams } from "next/navigation";
-import { TrackPlaysChart } from "@/components/custom/vault/track/trackPlays/trackPlaysChart";
 
 const TrackChartDetailPage: React.FC = () => {
 	const { chartName } = useParams() as { chartName?: string };
@@ -16,8 +16,16 @@ const TrackChartDetailPage: React.FC = () => {
 		.join(" ");
 
 	return (
-		<div className="container mx-auto flex flex-col items-center justify-center p-4 min-h-full">
-			<TrackPlaysChart chartName={displayChartName} />
+		<div>
+			<div className="container mx-auto flex flex-col items-center justify-center p-4 min-h-full">
+				{chartName === "track-plays" ? (
+					<TrackPlaysChart chartName={displayChartName} />
+				) : chartName === "track-duration" ? (
+					<TrackDurationHistogramChart chartName={displayChartName} />
+				) : (
+					<div>Unknown chart type</div>
+				)}
+			</div>
 		</div>
 	);
 };

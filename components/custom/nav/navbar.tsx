@@ -18,8 +18,6 @@ export default function NavBar() {
 	const isAuthenticated = !!session;
 	const [isHovering, setIsHovering] = useState(false);
 	const router = useRouter();
-	const { resolvedTheme } = useTheme();
-	const barColor = resolvedTheme === "dark" ? "black" : "white";
 	const { theme, setTheme } = useTheme();
 	const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
 
@@ -116,7 +114,7 @@ export default function NavBar() {
 											animate={{ opacity: 1, width: "auto" }}
 											exit={{ opacity: 0, width: 0 }}
 											transition={{ duration: 0.2 }}>
-											<AnimatedBars barwidth={2} barcolor={barColor} />
+											<AnimatedBars barwidth={2} />
 										</motion.div>
 									)}
 								</AnimatePresence>
