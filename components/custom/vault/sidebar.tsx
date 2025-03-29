@@ -106,9 +106,7 @@ export function VaultSideBar() {
 															onClick={
 																dropdownItem.action === "logout"
 																	? () => {
-																			signOut({ redirect: false }).then(() => {
-																				window.location.href = "/";
-																			});
+																			signOut({ redirect: true, callbackUrl: "/" });
 																	  }
 																	: dropdownItem.onClick
 															}
