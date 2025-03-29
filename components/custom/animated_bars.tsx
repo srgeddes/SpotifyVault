@@ -9,12 +9,13 @@ interface AnimatedBarsProps {
 	scale?: number;
 }
 
-const AnimatedBars: React.FC<AnimatedBarsProps> = ({ barwidth = 2, scale = 1 }) => {
+const AnimatedBars: React.FC<AnimatedBarsProps> = ({ barwidth = 2, scale = 1, barcolor }) => {
 	const { resolvedTheme } = useTheme();
-	const barColor = resolvedTheme === "dark" ? "white" : "black";
+	const themeBarColor = resolvedTheme === "dark" ? "white" : "black";
+	const finalBarColor = barcolor || themeBarColor;
 
 	return (
-		<StyledBars barwidth={barwidth} barcolor={barColor} scale={scale}>
+		<StyledBars barwidth={barwidth} barcolor={finalBarColor} scale={scale}>
 			<div className="loading">
 				<div className="load"></div>
 				<div className="load"></div>

@@ -47,7 +47,7 @@ export default function EnterVaultSection() {
 										animate={{ opacity: 1, width: "auto" }}
 										exit={{ opacity: 0, width: 0 }}
 										transition={{ duration: 0.2 }}>
-										<AnimatedBars barwidth={2} />
+										<AnimatedBars barwidth={2} barcolor={"white"} />
 									</motion.div>
 								)}
 							</AnimatePresence>
