@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import { useTrackPlays } from "@/hooks/user/track-plays";
 import { useTheme } from "next-themes";
+import Loading from "@/components/custom/loading";
 
 function formatSeconds(sec: number): string {
 	const minutes = Math.floor(sec / 60);
@@ -43,7 +44,6 @@ export const TrackDurationHistogramThumbnail: React.FC<TrackDurationHistogramThu
 		});
 		return Object.entries(bins)
 			.map(([bin, count]) => {
-				// Extract start value from the bin label (e.g., "0:00-0:30" => 0)
 				const [startStr] = bin.split("-");
 				const [minStr, secStr] = startStr.split(":");
 				const startVal = parseInt(minStr, 10) * 60 + parseInt(secStr, 10);
@@ -53,7 +53,7 @@ export const TrackDurationHistogramThumbnail: React.FC<TrackDurationHistogramThu
 			.map(({ bin, count }) => ({ bin, count }));
 	}, [trackPlays]);
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) return <Loading />;
 	if (isError) return <div>Error loading track plays</div>;
 	if (!trackPlays || trackPlays.length === 0) return null;
 

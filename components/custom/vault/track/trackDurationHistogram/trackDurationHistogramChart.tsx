@@ -5,6 +5,7 @@ import { CartesianGrid, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContaine
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTheme } from "next-themes";
 import { useTrackPlays } from "@/hooks/user/track-plays";
+import Loading from "@/components/custom/loading";
 
 interface CustomTooltipProps {
 	active?: boolean;
@@ -52,10 +53,10 @@ export const TrackDurationHistogramChart: React.FC<{ chartName: string }> = ({ c
 	const histogramData = useMemo(() => {
 		if (!trackPlays) return [];
 		const bins: Record<string, number> = {};
-		const binSize = 0.5; // 0.5 minutes = 30-second bins. (Use 0.25 for 15-second bins.)
+		const binSize = 0.25;
 		trackPlays.forEach((play) => {
-			const duration = play.durationMs ? play.durationMs / 60000 : 0; // duration in minutes
-			const bin = Math.floor(duration / binSize) * binSize; // e.g. 2.75 becomes 2.5
+			const duration = play.durationMs ? play.durationMs / 60000 : 0;
+			const bin = Math.floor(duration / binSize) * binSize;
 			const startSeconds = Math.round(bin * 60);
 			const endSeconds = Math.round((bin + binSize) * 60);
 			const binLabel = `${formatSeconds(startSeconds)}-${formatSeconds(endSeconds)}`;
@@ -72,7 +73,7 @@ export const TrackDurationHistogramChart: React.FC<{ chartName: string }> = ({ c
 			.map(({ bin, count }) => ({ bin, count }));
 	}, [trackPlays]);
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) return <Loading />;
 	if (isError) return <div>Error loading track plays</div>;
 	if (!trackPlays || trackPlays.length === 0) return <div>No track plays data available</div>;
 

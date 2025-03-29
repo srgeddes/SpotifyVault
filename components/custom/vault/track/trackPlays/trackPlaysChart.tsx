@@ -11,6 +11,7 @@ import { CalendarIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTrackPlays } from "@/hooks/user/track-plays";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Loading from "@/components/custom/loading";
 
 interface CustomTooltipProps {
 	active?: boolean;
@@ -113,7 +114,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 			.sort((a, b) => a.date.localeCompare(b.date));
 	}, [groupedData]);
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) return <Loading />;
 	if (isError) return <div>Error loading track plays</div>;
 	if (!trackPlays || trackPlays.length === 0) return <div>No track plays data available</div>;
 

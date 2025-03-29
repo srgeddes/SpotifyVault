@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CartesianGrid, LineChart, Line, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { useTrackPlays } from "@/hooks/user/track-plays";
 import { useTheme } from "next-themes";
+import Loading from "@/components/custom/loading";
 
 interface TrackPlaysChartThumbnailProps {
 	chartName: string;
@@ -39,7 +40,7 @@ export const TrackPlaysChartThumbnail: React.FC<TrackPlaysChartThumbnailProps> =
 			.sort((a, b) => a.date.localeCompare(b.date));
 	}, [groupedData]);
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) return <Loading />;
 	if (isError) return <div>Error loading track plays</div>;
 	if (!trackPlays || trackPlays.length === 0) return null;
 
