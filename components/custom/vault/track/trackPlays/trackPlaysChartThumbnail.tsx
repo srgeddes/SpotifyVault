@@ -43,8 +43,6 @@ export const TrackPlaysChartThumbnail: React.FC<TrackPlaysChartThumbnailProps> =
 	if (isError) return <div>Error loading track plays</div>;
 	if (!trackPlays || trackPlays.length === 0) return null;
 
-	const maxSongs = chartData.reduce((max, item) => Math.max(max, item.songs), 0);
-
 	return (
 		<Link href={`/vault/track/${chartName}`} className="cursor-pointer">
 			<Card className="hover:shadow-lg transition-shadow cursor-pointer">
