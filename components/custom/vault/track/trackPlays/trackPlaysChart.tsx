@@ -115,6 +115,14 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 	const totalSongs = chartData.reduce((sum, item) => sum + item.songs, 0);
 	const averageSongsPerDay = Math.round(totalSongs / chartData.length);
 	const tickInterval = chartData.length > 60 ? Math.floor(chartData.length / 30) : 0;
+	const maxSongs = chartData.reduce((max, item) => Math.max(max, item.songs), 0);
+	const yAxisUpperBound = Math.ceil(maxSongs / 10) * 10;
+
+	const tickStep = 5;
+	const ticks = [];
+	for (let i = 0; i <= yAxisUpperBound; i += tickStep) {
+		ticks.push(i);
+	}
 
 	return (
 		<Card className="w-full relative">
@@ -252,6 +260,8 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 								tickLine={false}
 								axisLine={false}
 								tickMargin={8}
+								domain={[0, yAxisUpperBound]}
+								ticks={ticks}
 								label={{
 									value: "Songs Played",
 									angle: -90,
