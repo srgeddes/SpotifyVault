@@ -43,11 +43,13 @@ export const TrackPlaysChartThumbnail: React.FC<TrackPlaysChartThumbnailProps> =
 	if (isError) return <div>Error loading track plays</div>;
 	if (!trackPlays || trackPlays.length === 0) return null;
 
+	const maxSongs = chartData.reduce((max, item) => Math.max(max, item.songs), 0);
+
 	return (
 		<Link href={`/vault/track/${chartName}`} className="cursor-pointer">
 			<Card className="hover:shadow-lg transition-shadow cursor-pointer">
 				<CardContent className="p-2">
-					<div className="text-center text-lg font-semibold mb-1">{chartName}</div>
+					<div className="text-center text-lg font-semibold mb-1">Track Plays</div>
 					<ResponsiveContainer width="100%" height={200} className="pointer-events-none">
 						<LineChart data={chartData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
 							<CartesianGrid strokeDasharray="3 3" vertical={false} stroke={axisColor} opacity={0.1} />
@@ -74,6 +76,7 @@ export const TrackPlaysChartThumbnail: React.FC<TrackPlaysChartThumbnailProps> =
 								axisLine={false}
 								tickMargin={8}
 								tick={false}
+								domain={[0, (dataMax: number) => dataMax + 10]}
 								label={{
 									value: "Song Plays",
 									angle: -90,

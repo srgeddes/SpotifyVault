@@ -222,7 +222,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 			</div>
 
 			<CardHeader>
-				<CardTitle>{chartName}</CardTitle>
+				<CardTitle>Track Plays</CardTitle>
 				<CardDescription>Number of songs played each day/week/month/year</CardDescription>
 			</CardHeader>
 

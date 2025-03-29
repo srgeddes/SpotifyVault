@@ -10,9 +10,11 @@ const TrackChartDetailPage: React.FC = () => {
 		return <div>No chart name provided.</div>;
 	}
 
+	const decodedChartName = decodeURIComponent(chartName);
+
 	return (
 		<div className="container mx-auto flex flex-col items-center justify-center p-4 min-h-full">
-			<TrackPlaysChart chartName={chartName} />
+			<TrackPlaysChart chartName={decodedChartName} />
 		</div>
 	);
 };

@@ -2,7 +2,7 @@ import { TrackPlaysChartThumbnail } from "@/components/custom/vault/track/trackP
 import React from "react";
 
 const TrackVault: React.FC = () => {
-	const chartNames = ["Track Plays"];
+	const chartNames = ["track-plays"];
 
 	return (
 		<div className="grid grid-cols-2 gap-3 mt-14">
