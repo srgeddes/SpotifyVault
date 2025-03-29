@@ -10,6 +10,7 @@ import { useListeningPercentile } from "@/hooks/user/listening-percentile";
 import { useUndergroundScore } from "@/hooks/user/underground-score";
 import CardLoader from "../../CardLoader";
 import { SpotifyLink } from "../../SpotifyLink";
+import { useUserData } from "@/hooks/user/useUserData";
 
 export default function Home() {
 	const { data: session } = useSession();
@@ -18,7 +19,14 @@ export default function Home() {
 	const { minutesListened, loading: minutesLoading, error: minutesError } = useMinutesListened(10000);
 	const { percentileData, error: percentileError } = useListeningPercentile(10000);
 	const { undergroundScore, error: undergroundScoreError } = useUndergroundScore();
-
+	const { user } = useUserData(session?.user?.name || "");
+	const formattedJoinedAtDate = user?.createdAt
+		? new Date(user.createdAt).toLocaleDateString(undefined, {
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+		  })
+		: "";
 	if (artistsError || tracksError) {
 		return (
 			<Card className="w-full mx-auto p-6">
@@ -45,6 +53,7 @@ export default function Home() {
 							<AvatarImage src={session?.user?.image || "/default-avatar.png"} alt={`${session?.user?.name}'s profile`} className="object-cover" />
 							<AvatarFallback className="text-4xl">{session?.user?.name?.charAt(0) || "U"}</AvatarFallback>
 						</Avatar>
+
 						<div>
 							<CardTitle className="text-3xl mb-4">
 								<span>
@@ -57,7 +66,7 @@ export default function Home() {
 
 					<CardContent>
 						<div className="flex">
-							<div className="w-1/2 rounded-lg">
+							<div className="w-1/4 rounded-lg">
 								<h3 className="text-xl font-bold mb-4">Total Listening</h3>
 								{minutesError ? (
 									<p className="text-muted-foreground">Error loading minutes listened</p>
@@ -80,7 +89,12 @@ export default function Home() {
 								)}
 							</div>
 
-							<div className="flex">
+							<div className="w-1/3 rounded-lg">
+								<h3 className="text-xl font-bold mb-4">Joined</h3>
+								<p className="text-2xl">{formattedJoinedAtDate}</p>
+							</div>
+
+							<div className="flex w-1/2">
 								<div className="w-1/2 rounded-lg">
 									<h3 className="text-xl font-bold mb-4">Top Artists</h3>
 									<div className="space-y-3">

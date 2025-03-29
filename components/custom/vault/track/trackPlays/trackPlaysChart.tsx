@@ -120,7 +120,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 
 	const tickInterval = chartData.length > 60 ? Math.floor(chartData.length / 30) : 0;
 	const maxSongs = chartData.reduce((max, item) => Math.max(max, item.songs), 0);
-	const yAxisUpperBound = Math.ceil(maxSongs / 10) * 10;
+	const yAxisUpperBound = Math.ceil(maxSongs / 10) * 12;
 	const totalValue = chartData.reduce((sum, item) => sum + item.songs, 0);
 	const averageValue = Math.round(totalValue / chartData.length);
 

@@ -1,4 +1,5 @@
 "use client";
+import TopTracksChart from "@/components/custom/vault/track/topTracks/topTracksChart";
 import { TrackDurationHistogramChart } from "@/components/custom/vault/track/trackDurationHistogram/trackDurationHistogramChart";
 import TrackPlaysChart from "@/components/custom/vault/track/trackPlays/trackPlaysChart";
 import { useParams } from "next/navigation";
@@ -22,8 +23,10 @@ const TrackChartDetailPage: React.FC = () => {
 					<TrackPlaysChart chartName={displayChartName} />
 				) : chartName === "track-duration" ? (
 					<TrackDurationHistogramChart chartName={displayChartName} />
+				) : chartName === "top-tracks" ? (
+					<TopTracksChart chartName={displayChartName} />
 				) : (
-					<div>Unknown chart type</div>
+					<div>Chart not found.</div>
 				)}
 			</div>
 		</div>

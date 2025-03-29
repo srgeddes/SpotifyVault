@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
-import { CartesianGrid, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { CartesianGrid, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTheme } from "next-themes";
 import { useTrackPlays } from "@/hooks/user/track-plays";
@@ -92,16 +92,26 @@ export const TrackDurationHistogramChart: React.FC<{ chartName: string }> = ({ c
 						<BarChart data={histogramData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 							<CartesianGrid strokeDasharray="3 3" stroke={barColor} opacity={0.1} />
 							<XAxis dataKey="bin" stroke={barColor} />
-							<YAxis stroke={barColor} domain={[0, yAxisUpperBound]} />
+							<YAxis
+								stroke={barColor}
+								label={{
+									value: "Tracks Count",
+									angle: -90,
+									position: "insideLeft",
+									offset: 10,
+									dy: 40,
+									style: { fill: barColor },
+								}}
+								domain={[0, yAxisUpperBound]}
+							/>
 							<Tooltip content={<CustomTooltip aggregation="duration" dataType={dataType} />} />
-							<Legend />
-							<Bar dataKey="count" fill={barColor} />
+							<Bar dataKey="count" fill={barColor} radius={[6, 6, 0, 0]} />
 						</BarChart>
 					</ResponsiveContainer>
 				</div>
 			</CardContent>
 			<CardFooter>
-				<div className="text-sm">Histogram of song duration bins (in minutes)</div>
+				<div className="text-sm">Histogram of song durations</div>
 			</CardFooter>
 		</Card>
 	);

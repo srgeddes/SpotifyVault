@@ -56,6 +56,18 @@ export async function scanUsers(): Promise<User[]> {
 	});
 }
 
+export async function getUserById(userId: string): Promise<User | null> {
+	const params = {
+		TableName: SPOTIFY_ACTIVITY_TABLE,
+		Key: {
+			PK: `USER#${userId}`,
+			SK: "METADATA",
+		},
+	};
+	const result = await ddbDocClient.send(new GetCommand(params));
+	return result.Item ? (result.Item as User) : null;
+}
+
 export interface TrackPlay {
 	id: string;
 	userId: string;
