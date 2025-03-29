@@ -38,6 +38,7 @@ export async function upsertUser(user: User): Promise<void> {
 
 	await ddbDocClient.send(new UpdateCommand(params));
 }
+
 export async function scanUsers(): Promise<User[]> {
 	const params = {
 		TableName: SPOTIFY_ACTIVITY_TABLE,
@@ -47,7 +48,12 @@ export async function scanUsers(): Promise<User[]> {
 	};
 
 	const result = await ddbDocClient.send(new ScanCommand(params));
-	return result.Items as User[];
+	const items = result.Items || [];
+
+	return items.map((item) => {
+		const id = (item.PK as string).replace("USER#", "");
+		return { ...item, id } as User;
+	});
 }
 
 export interface TrackPlay {

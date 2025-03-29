@@ -1,4 +1,3 @@
-// app/api/spotify/track/route.ts
 import { NextResponse } from "next/server";
 import { getAccessToken } from "@/lib/spotifyAuth";
 

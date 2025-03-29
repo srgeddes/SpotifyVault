@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import SpotifyProvider from "next-auth/providers/spotify";
-// import { upsertUser } from "@/services/dynamoService";
+import { upsertUser } from "@/services/dynamoService";
 
 interface SpotifyProfile {
 	id: string;
@@ -80,33 +80,42 @@ export const authOptions: NextAuthOptions = {
 			clientSecret: process.env.SPOTIFY_CLIENT_SECRET || "",
 			authorization:
 				"https://accounts.spotify.com/authorize?scope=user-read-email%20user-read-private%20user-top-read%20user-read-recently-played%20user-library-read%20playlist-read-private%20playlist-read-collaborative%20user-follow-read%20user-read-playback-state%20user-read-currently-playing",
+			profile: (profile) => {
+				return {
+					id: profile.display_name,
+					name: profile.display_name,
+					email: profile.email,
+					image: profile.images?.[0]?.url,
+				};
+			},
 		}),
 	],
 	callbacks: {
-		async signIn({ user, profile }): Promise<boolean> {
+		async signIn({ account, profile }): Promise<boolean> {
 			const spotifyProfile = profile as SpotifyProfile | null;
-			const userId = spotifyProfile?.id || user?.id;
+			const userId = spotifyProfile?.display_name;
+			console.log(userId);
 			if (!userId) {
-				console.error("No user id found in signIn callback");
+				console.error("No user display_name found in signIn callback");
 				return false;
 			}
 
-			// const newUser = {
-			// 	id: userId,
-			// 	spotifyId: spotifyProfile?.id || userId,
-			// 	email: spotifyProfile?.email || "",
-			// 	displayName: spotifyProfile?.display_name || "",
-			// 	refreshToken: account?.refresh_token || "",
-			// 	createdAt: new Date().toISOString(),
-			// 	updatedAt: new Date().toISOString(),
-			// };
+			const newUser = {
+				id: userId,
+				spotifyId: spotifyProfile?.id,
+				email: spotifyProfile?.email || "",
+				displayName: spotifyProfile?.display_name || "",
+				refreshToken: account?.refresh_token || "",
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
+			};
 
-			// try {
-			// 	await upsertUser(newUser);
-			// } catch (err) {
-			// 	console.error("Error saving/updating user in DynamoDB: ", err);
-			// 	return false;
-			// }
+			try {
+				await upsertUser(newUser);
+			} catch (err) {
+				console.error("Error saving/updating user in DynamoDB: ", err);
+				return false;
+			}
 			return true;
 		},
 

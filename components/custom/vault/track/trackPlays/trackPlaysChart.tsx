@@ -81,7 +81,10 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 			const dateObj = new Date(play.playedAt);
 
 			if (timePeriod === "dates" && dateRange.from && dateRange.to) {
-				if (dateObj < dateRange.from || dateObj > dateRange.to) return acc;
+				const playDate = dateObj.toISOString().slice(0, 10);
+				const fromDate = dateRange.from.toISOString().slice(0, 10);
+				const toDate = dateRange.to.toISOString().slice(0, 10);
+				if (playDate < fromDate || playDate > toDate) return acc;
 			}
 
 			let dateKey = "";
