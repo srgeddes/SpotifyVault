@@ -7,9 +7,12 @@ import Image from "next/image";
 import { useState } from "react";
 import { ListMusic } from "lucide-react";
 import { signIn } from "next-auth/react";
+import { useTheme } from "next-themes";
 
 export default function EnterVaultSection() {
 	const [isHovering, setIsHovering] = useState(false);
+	const { theme } = useTheme();
+	const barColor = theme === "dark" ? "black" : "white";
 
 	return (
 		<>
@@ -47,7 +50,7 @@ export default function EnterVaultSection() {
 										animate={{ opacity: 1, width: "auto" }}
 										exit={{ opacity: 0, width: 0 }}
 										transition={{ duration: 0.2 }}>
-										<AnimatedBars barwidth={2} barcolor={"white"} />
+										<AnimatedBars barwidth={2} barcolor={barColor} />
 									</motion.div>
 								)}
 							</AnimatePresence>

@@ -20,6 +20,7 @@ export default function NavBar() {
 	const router = useRouter();
 	const { theme, setTheme } = useTheme();
 	const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
+	const barColor = theme === "dark" ? "black" : "white";
 
 	const pathname = usePathname();
 	if (pathname.startsWith("/vault")) {
@@ -114,7 +115,7 @@ export default function NavBar() {
 											animate={{ opacity: 1, width: "auto" }}
 											exit={{ opacity: 0, width: 0 }}
 											transition={{ duration: 0.2 }}>
-											<AnimatedBars barwidth={2} barcolor={"white"} />
+											<AnimatedBars barwidth={2} barcolor={barColor} />
 										</motion.div>
 									)}
 								</AnimatePresence>

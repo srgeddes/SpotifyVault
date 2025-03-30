@@ -91,7 +91,7 @@ export const TrackDurationHistogramChart: React.FC<{ chartName: string }> = ({ c
 					<ResponsiveContainer width="100%" height="100%">
 						<BarChart data={histogramData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 							<CartesianGrid strokeDasharray="3 3" stroke={barColor} opacity={0.1} />
-							<XAxis dataKey="bin" stroke={barColor} />
+							<XAxis dataKey="bin" stroke={barColor} tick={{ fontSize: "12px" }} />
 							<YAxis
 								stroke={barColor}
 								label={{
