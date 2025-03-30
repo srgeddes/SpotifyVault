@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
-import { CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, Area, AreaChart } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -10,41 +10,43 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTrackPlays } from "@/hooks/user/track-plays";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Loading from "@/components/custom/loading";
+import { useArtistMetadata } from "@/hooks/artist/useArtistMetadata";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Image from "next/image";
 
 interface CustomTooltipProps {
 	active?: boolean;
 	payload?: { name: string; value: number }[];
 	label?: string;
 	aggregation: string;
-	dataType: "plays" | "minutes";
+	image?: string;
+	artistName?: string;
 }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, aggregation, dataType }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, aggregation, image, artistName }) => {
 	if (active && payload && payload.length) {
 		return (
-			<div className="bg-background/50 backdrop-blur-md p-4 rounded-md shadow-lg border border-border ml-2">
-				<p className="font-bold">
-					{(() => {
-						if (aggregation === "day") {
-							const d = new Date(label + "T00:00:00");
-							return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-						} else if (aggregation === "month") {
-							const d = new Date(label + "-01T00:00:00");
-							return format(d, "MMM yyyy");
-						} else if (aggregation === "year") {
-							return label;
-						} else {
-							return label;
-						}
-					})()}
-				</p>{" "}
-				<div className="flex items-center gap-3 mt-2">
-					<div>
-						<p className="font-medium">{dataType === "plays" ? "Tracks Played" : "Minutes Played"}</p>
-						<p className="text-sm">
-							<span className="font-semibold">{dataType === "minutes" ? Number(payload[0].value).toFixed(2) : payload[0].value}</span>{" "}
+			<div className="flex flex-col justify-center items-center">
+				<div className="bg-background/20 backdrop-blur-lg p-4 rounded-md shadow-lg border border-border ml-2">
+					<div className="text-left">
+						<p className="font-bold">
+							{aggregation === "day"
+								? new Date(label + "T00:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric" })
+								: aggregation === "month"
+								? format(new Date(label + "-01T00:00:00"), "MMM yyyy")
+								: aggregation === "year"
+								? label
+								: label}
+						</p>
+					</div>
+					<div className="flex justify-start items-start my-2">
+						{image && <Image src={image} alt="Artist Image" width={80} height={80} className="rounded-full" />}
+					</div>
+					<div className="">
+						{artistName && <p className="text-sm font-medium">{artistName}</p>}
+						<p className="font-medium text-sm">
+							Track Plays: <span className="font-semibold">{payload[0].value}</span>
 						</p>
 					</div>
 				</div>
@@ -62,24 +64,65 @@ function getWeekNumber(date: Date) {
 	return 1 + Math.round(((d.getTime() - week1.getTime()) / 86400000 - 3 + ((week1.getDay() + 6) % 7)) / 7);
 }
 
-export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) => {
+interface TrackPlay {
+	artistIds?: string;
+	playedAt: string;
+	trackId?: string;
+	trackName?: string;
+}
+
+export const ArtistPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) => {
 	const { trackPlays, isLoading, isError } = useTrackPlays();
 	const { resolvedTheme } = useTheme();
 	const [timePeriod, setTimePeriod] = useState("all");
-	const [dateRange, setDateRange] = useState<{ from: Date | null; to: Date | null }>({ from: null, to: null });
+	const [dateRange, setDateRange] = useState<{ from: Date | null; to: Date | null }>({
+		from: null,
+		to: null,
+	});
 	const [aggregation, setAggregation] = useState("day");
 	const [lineColor, setLineColor] = useState(resolvedTheme === "dark" ? "#ffffff" : "#000000");
-	const [dataType, setDataType] = useState<"plays" | "minutes">("plays");
 
 	useEffect(() => {
 		setLineColor(resolvedTheme === "dark" ? "#ffffff" : "#000000");
 	}, [resolvedTheme]);
 
-	const groupedData = useMemo(() => {
-		if (!trackPlays) return {};
-		return trackPlays.reduce((acc: Record<string, number>, play) => {
-			const dateObj = new Date(play.playedAt);
+	const topArtistId = useMemo(() => {
+		if (!trackPlays) return null;
+		const counts: Record<string, number> = {};
 
+		trackPlays.forEach((play: TrackPlay) => {
+			if (play.artistIds) {
+				const ids = play.artistIds.split(",").map((id: string) => id.trim());
+				ids.forEach((id: string) => {
+					if (id) counts[id] = (counts[id] || 0) + 1;
+				});
+			}
+		});
+
+		const sorted = Object.entries(counts).sort(([, a], [, b]) => b - a);
+		return sorted.length > 0 ? sorted[0][0] : null;
+	}, [trackPlays]);
+
+	const {
+		metadata: artistMetadata,
+		isLoading: isArtistMetadataLoading,
+		isError: isArtistMetadataError,
+	} = useArtistMetadata(topArtistId ? [topArtistId] : []);
+	const artistName = artistMetadata && artistMetadata.length > 0 ? artistMetadata[0].name : "Unknown Artist";
+
+	const filteredTrackPlays = useMemo(() => {
+		if (!trackPlays || !topArtistId) return [];
+		return trackPlays.filter((play: TrackPlay) => {
+			if (!play.artistIds) return false;
+			const ids = play.artistIds.split(",").map((id: string) => id.trim());
+			return ids.includes(topArtistId);
+		});
+	}, [trackPlays, topArtistId]);
+
+	const groupedData = useMemo(() => {
+		if (!filteredTrackPlays) return {};
+		return filteredTrackPlays.reduce((acc: Record<string, number>, play: TrackPlay) => {
+			const dateObj = new Date(play.playedAt);
 			if (timePeriod === "dates" && dateRange.from && dateRange.to) {
 				const playDate = dateObj.toISOString().slice(0, 10);
 				const fromDate = dateRange.from.toISOString().slice(0, 10);
@@ -98,31 +141,27 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 				dateKey = format(dateObj, "yyyy");
 			}
 
-			if (dataType === "plays") {
-				acc[dateKey] = (acc[dateKey] || 0) + 1;
-			} else {
-				const minutesPlayed = play.durationMs ? play.durationMs / 60000 : 0;
-				acc[dateKey] = (acc[dateKey] || 0) + minutesPlayed;
-			}
+			acc[dateKey] = (acc[dateKey] || 0) + 1;
 			return acc;
 		}, {});
-	}, [trackPlays, timePeriod, dateRange, aggregation, dataType]);
+	}, [filteredTrackPlays, timePeriod, dateRange, aggregation]);
 
 	const chartData = useMemo(() => {
 		return Object.entries(groupedData)
-			.map(([date, songs]) => ({ date, songs }))
+			.map(([date, plays]) => ({ date, plays }))
 			.sort((a, b) => a.date.localeCompare(b.date));
 	}, [groupedData]);
 
-	if (isLoading) return <Loading />;
-	if (isError) return <div>Error loading track plays</div>;
+	if (isLoading || isArtistMetadataLoading) return <Loading />;
+	if (isError || isArtistMetadataError) return <div>Error loading data</div>;
 	if (!trackPlays || trackPlays.length === 0) return <div>No track plays data available</div>;
+	if (!filteredTrackPlays || filteredTrackPlays.length === 0) return <div>No plays data available for the selected artist</div>;
 
 	const tickInterval = chartData.length > 60 ? Math.floor(chartData.length / 30) : 0;
-	const maxSongs = chartData.reduce((max, item) => Math.max(max, item.songs), 0);
-	const yAxisUpperBound = Math.ceil(maxSongs / 10) * 12;
-	const totalValue = chartData.reduce((sum, item) => sum + item.songs, 0);
-	const averageValue = Math.round(totalValue / chartData.length);
+	const maxPlays = chartData.reduce((max, item) => Math.max(max, item.plays), 0);
+	const yAxisUpperBound = Math.ceil(maxPlays / 10) * 12;
+	const totalPlays = chartData.reduce((sum, item) => sum + item.plays, 0);
+	const averagePlays = Math.round(totalPlays / chartData.length);
 
 	const tickStep = 5;
 	const ticks = [];
@@ -174,16 +213,6 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 					</SelectContent>
 				</Select>
 
-				<Select value={dataType} onValueChange={(value) => setDataType(value as "plays" | "minutes")}>
-					<SelectTrigger className="w-[100px] border rounded p-1 text-sm cursor-pointer text-center">
-						<SelectValue placeholder="Data Type" />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="plays">Plays</SelectItem>
-						<SelectItem value="minutes">Minutes</SelectItem>
-					</SelectContent>
-				</Select>
-
 				{timePeriod === "dates" && (
 					<Popover>
 						<PopoverTrigger asChild>
@@ -216,7 +245,6 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 								}
 								onSelect={(range) => {
 									if (!range?.from) return;
-
 									if (!range.to) {
 										const dayStart = new Date(range.from);
 										dayStart.setHours(0, 0, 0, 0);
@@ -238,14 +266,14 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 			</div>
 
 			<CardHeader>
-				<CardTitle>{chartName}</CardTitle>
-				<CardDescription>Number of tracks played or minutes listened over time</CardDescription>
+				<CardTitle>{`${chartName} - ${artistName}`}</CardTitle>
+				<CardDescription>Number of track plays for the selected artist</CardDescription>
 			</CardHeader>
 
 			<CardContent>
 				<div className="h-150">
 					<ResponsiveContainer width="100%" height="100%">
-						<AreaChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+						<LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 							<CartesianGrid strokeDasharray="3 3" vertical={false} stroke={lineColor} opacity={0.1} />
 							<XAxis
 								dataKey="date"
@@ -271,7 +299,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 								}}
 							/>
 							<YAxis
-								dataKey="songs"
+								dataKey="plays"
 								stroke={lineColor}
 								tickLine={false}
 								axisLine={false}
@@ -279,7 +307,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 								domain={[0, yAxisUpperBound]}
 								ticks={ticks}
 								label={{
-									value: dataType === "plays" ? "Tracks Played" : "Minutes Listened",
+									value: "Track Plays",
 									angle: -90,
 									position: "insideLeft",
 									offset: -5,
@@ -287,31 +315,26 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 									style: { fill: lineColor },
 								}}
 							/>
-							<Tooltip content={<CustomTooltip aggregation={aggregation} dataType={dataType} />} />{" "}
-							<Legend
-								wrapperStyle={{
-									paddingTop: 40,
-									visibility: "hidden",
-								}}
+							<Tooltip
+								content={<CustomTooltip aggregation={aggregation} image={artistMetadata[0]?.imageUrl} artistName={artistMetadata[0].name} />}
 							/>
-							<Area
+							<Legend wrapperStyle={{ paddingTop: 40, visibility: "hidden" }} />
+							<Line
 								type="monotone"
-								dataKey="songs"
+								dataKey="plays"
 								stroke={lineColor}
-								fill={lineColor}
-								fillOpacity={0.2}
 								strokeWidth={3}
-								dot={{ r: 2 }}
+								dot={{ r: 4 }}
 								activeDot={{ r: 8, stroke: lineColor, strokeWidth: 2 }}
 							/>
-						</AreaChart>
+						</LineChart>
 					</ResponsiveContainer>
 				</div>
 			</CardContent>
 
 			<CardFooter>
 				<div className="text-sm">
-					Average of {averageValue} {dataType === "plays" ? "songs" : "minutes"} per{" "}
+					Average of {averagePlays} plays per{" "}
 					{aggregation === "day" ? "day" : aggregation === "week" ? "week" : aggregation === "month" ? "month" : "year"}
 				</div>
 			</CardFooter>
@@ -319,4 +342,4 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 	);
 };
 
-export default TrackPlaysChart;
+export default ArtistPlaysChart;

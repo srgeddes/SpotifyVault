@@ -43,12 +43,12 @@ export function VaultSideBar() {
 		},
 		{
 			title: "Artist",
-			url: "#",
+			url: "/vault/artist",
 			icon: MicVocal,
 		},
 		{
 			title: "Genre",
-			url: "#",
+			url: "/vault/genre",
 			icon: Guitar,
 		},
 		{

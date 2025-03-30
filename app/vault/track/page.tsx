@@ -4,7 +4,7 @@ import { TrackPlaysChartThumbnail } from "@/components/custom/vault/track/trackP
 import React from "react";
 
 const TrackVault: React.FC = () => {
-	const chartNames = ["track-plays", "track-duration", "top-tracks"];
+	const chartNames = ["track-plays", "top-tracks", "track-duration"];
 
 	return (
 		<div>

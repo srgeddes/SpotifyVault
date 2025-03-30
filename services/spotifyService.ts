@@ -68,6 +68,7 @@ export async function updatePlayedTracks(user: any): Promise<void> {
 				durationMs: track.duration_ms,
 				context: item.context ? JSON.stringify(item.context) : undefined,
 				playlistId: item.context?.uri.split(":")[2] || null,
+				artistIds: track.artists.map((artist: any) => artist.id).join(","),
 			};
 
 			try {

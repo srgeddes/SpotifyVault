@@ -76,7 +76,7 @@ export interface TrackPlay {
 	durationMs?: number;
 	context?: string;
 	playlistId?: string;
-	liked?: boolean;
+	artistIds?: string;
 }
 
 export async function saveTrackPlay(trackPlay: TrackPlay): Promise<void> {
@@ -89,7 +89,7 @@ export async function saveTrackPlay(trackPlay: TrackPlay): Promise<void> {
 		durationMs: trackPlay.durationMs,
 		context: trackPlay.context,
 		playlistId: trackPlay.playlistId || "",
-		liked: trackPlay.liked || false,
+		artistIds: trackPlay.artistIds ? trackPlay.artistIds : undefined,
 	};
 
 	await ddbDocClient.send(
@@ -417,14 +417,29 @@ export async function saveTrackMetadata(metadata: TrackMetadata): Promise<void> 
 }
 
 export async function batchGetTrackMetadata(trackIds: string[]): Promise<TrackMetadata[]> {
-	const keys = trackIds.map((id) => ({ trackId: id }));
-	const params = {
-		RequestItems: {
-			[TRACK_METADATA_TABLE]: { Keys: keys },
-		},
-	};
-	const result = await ddbDocClient.send(new BatchGetCommand(params));
-	return (result.Responses?.[TRACK_METADATA_TABLE] || []) as TrackMetadata[];
+	const chunkSize = 100;
+	const chunks: string[][] = [];
+
+	for (let i = 0; i < trackIds.length; i += chunkSize) {
+		chunks.push(trackIds.slice(i, i + chunkSize));
+	}
+
+	let allMetadata: TrackMetadata[] = [];
+
+	for (const chunk of chunks) {
+		const keys = chunk.map((id) => ({ trackId: id }));
+		const params = {
+			RequestItems: {
+				[TRACK_METADATA_TABLE]: { Keys: keys },
+			},
+		};
+
+		const result = await ddbDocClient.send(new BatchGetCommand(params));
+		const metadata = (result.Responses?.[TRACK_METADATA_TABLE] || []) as TrackMetadata[];
+		allMetadata = allMetadata.concat(metadata);
+	}
+
+	return allMetadata;
 }
 
 export interface ArtistMetadata {
