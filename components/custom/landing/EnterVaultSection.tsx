@@ -16,7 +16,7 @@ export default function EnterVaultSection() {
 
 	return (
 		<>
-			<div className="text-center">
+			<div className="text-center" id="enter-vault">
 				<motion.h1
 					className="text-5xl font-bold"
 					initial={{ clipPath: "inset(0% 100% -10% 0%)" }}

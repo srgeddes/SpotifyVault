@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 
@@ -48,12 +48,16 @@ export default function NavBar() {
 
 					<MenubarMenu>
 						<motion.div whileHover={{ scale: 1.05 }}>
-							<MenubarTrigger className="text-base font-medium cursor-pointerPlanding mr-2">Features</MenubarTrigger>
+							<MenubarTrigger className="text-base font-medium cursor-pointer Planding mr-2">Features</MenubarTrigger>
 						</motion.div>
 						<MenubarContent>
-							<MenubarItem className="cursor-pointer">Line Chart</MenubarItem>
-							<MenubarItem className="cursor-pointer">Histogram</MenubarItem>
-							<MenubarItem className="cursor-pointer">PolarChart</MenubarItem>
+							<MenubarItem className="cursor-pointer">
+								<Link href="/#enter-vault">Line Charts</Link>
+							</MenubarItem>
+							<MenubarItem className="cursor-pointer">
+								<Link href="/#dive-dna">Pie Charts</Link>
+							</MenubarItem>
+							<MenubarItem className="cursor-pointer">Polar Charts</MenubarItem>
 						</MenubarContent>
 					</MenubarMenu>
 

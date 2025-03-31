@@ -213,8 +213,10 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 
 	const mostPlayedTrackByGenre: Record<string, TrackCount> = useMemo((): Record<string, TrackCount> => {
 		const genreTrackCounts: Record<string, TrackCount[]> = {};
+		const otherGenreTracks: TrackCount[] = [];
 		if (!trackPlays) return {};
 
+		// First, get all genre track counts
 		trackPlays.forEach((play: TrackPlay): void => {
 			if (!play.artistIds) return;
 			const firstArtistId: string = play.artistIds.split(",")[0].trim();
@@ -244,6 +246,26 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 				topTrackByGenre[genre] = tracks[0];
 			}
 		});
+
+		// Add support for "Other" category
+		if (Object.keys(genreTrackCounts).length > 19) {
+			// Combine all tracks from less popular genres
+			Object.values(otherGenreTracks).forEach((tracks: TrackCount): void => {
+				const existingTrack: TrackCount | undefined = otherGenreTracks.find((t: TrackCount): boolean => t.trackId === tracks.trackId);
+				if (existingTrack) {
+					existingTrack.count += tracks.count;
+				} else {
+					otherGenreTracks.push({ ...tracks });
+				}
+			});
+
+			// Find the most played track in the "Other" category
+			if (otherGenreTracks.length > 0) {
+				otherGenreTracks.sort((a: TrackCount, b: TrackCount): number => b.count - a.count);
+				topTrackByGenre["Other"] = otherGenreTracks[0];
+			}
+		}
+
 		return topTrackByGenre;
 	}, [trackPlays, artistPrimaryGenres]);
 
@@ -261,6 +283,8 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 	const genreDistribution: GenreDistributionItem[] = useMemo((): GenreDistributionItem[] => {
 		const distribution: Record<string, number> = {};
 		if (!trackPlays) return [];
+
+		// Count plays by genre
 		trackPlays.forEach((play: TrackPlay): void => {
 			if (!play.artistIds) return;
 			const firstArtistId: string = play.artistIds.split(",")[0].trim();
@@ -271,7 +295,7 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 		});
 
 		// Convert to array and sort by value in descending order
-		return Object.entries(distribution)
+		const sortedDistribution = Object.entries(distribution)
 			.map(
 				([genre, count]: [string, number]): GenreDistributionItem => ({
 					name: genre,
@@ -279,6 +303,17 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 				})
 			)
 			.sort((a: GenreDistributionItem, b: GenreDistributionItem): number => b.value - a.value);
+
+		// Limit to top 19 genres and combine the rest as "Other"
+		if (sortedDistribution.length > 19) {
+			const topGenres = sortedDistribution.slice(0, 19);
+			const otherGenres = sortedDistribution.slice(19);
+			const otherValue = otherGenres.reduce((sum, item) => sum + item.value, 0);
+
+			return [...topGenres, { name: "Other", value: otherValue }];
+		}
+
+		return sortedDistribution;
 	}, [trackPlays, artistPrimaryGenres]);
 
 	const totalPlays: number = useMemo((): number => {
@@ -426,7 +461,7 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 			</CardContent>
 			<CardFooter className="pt-6 flex justify-between text-sm text-gray-500">
 				<div>Total tracks: {totalPlays}</div>
-				<div>{genreDistribution.length} genres shown</div>
+				<div>{genreDistribution.length >= 20 ? "Top 19 genres + Others shown" : `${genreDistribution.length} genres shown`}</div>
 			</CardFooter>
 		</Card>
 	);
