@@ -107,7 +107,7 @@ export default function NavBar() {
 							className="flex items-center"
 							onMouseEnter={() => setIsHovering(true)}
 							onMouseLeave={() => setIsHovering(false)}>
-							<Button onClick={() => signIn("spotify", { callbackUrl: "/vault" })} variant={"default"} className="cursor-pointer">
+							<Button onClick={() => signIn("demo", { callbackUrl: "/vault" })} variant="default" className="">
 								<AnimatePresence>
 									{isHovering && (
 										<motion.div
@@ -119,7 +119,7 @@ export default function NavBar() {
 										</motion.div>
 									)}
 								</AnimatePresence>
-								Login
+								Try Demo
 							</Button>
 						</motion.div>
 					)}
