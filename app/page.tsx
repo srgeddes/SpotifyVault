@@ -12,7 +12,7 @@ export default async function Home() {
 	}
 
 	return (
-		<div className="flex flex-col items-center w-full min-h-screen justify-around space-y-14 pt-30">
+		<div className="flex flex-col items-center w-full min-h-screen justify-center space-y-14 pt-30">
 			<EnterVaultSection />
 			<DiveDNASection />
 		</div>

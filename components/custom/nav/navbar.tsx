@@ -4,7 +4,7 @@ import Logo from "../logo";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 import AnimatedBars from "../animated_bars";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,6 +21,20 @@ export default function NavBar() {
 	const { theme, setTheme } = useTheme();
 	const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
 	const barColor = theme === "dark" ? "black" : "white";
+	const [isMobile, setIsMobile] = useState(false);
+
+	useEffect(() => {
+		const checkIfMobile = () => {
+			setIsMobile(window.innerWidth < 640);
+		};
+
+		checkIfMobile();
+		window.addEventListener("resize", checkIfMobile);
+
+		return () => {
+			window.removeEventListener("resize", checkIfMobile);
+		};
+	}, []);
 
 	const pathname = usePathname();
 	if (pathname.startsWith("/vault")) {
@@ -30,7 +44,7 @@ export default function NavBar() {
 	return (
 		<nav className="fixed top-5 z-50 w-full flex justify-center">
 			<motion.div
-				className="inline-flex bg-white/25 backdrop-blur-lg shadow-sm rounded-full py-4 px-4"
+				className="inline-flex bg-white/25 backdrop-blur-lg shadow-sm rounded-full py-2 sm:py-4 px-2 sm:px-4"
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.5, ease: "easeOut" }}
@@ -41,14 +55,14 @@ export default function NavBar() {
 				}}>
 				<Menubar className="border-none shadow-none bg-transparent">
 					<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
-						<Link href="/" className="mr-6 ml-2 flex items-center font-bold">
-							<Logo width={40} height={40} />
+						<Link href="/" className="mr-2 sm:mr-6 flex items-center font-bold">
+							<Logo width={isMobile ? 32 : 45} height={isMobile ? 32 : 45} />
 						</Link>
 					</motion.div>
 
 					<MenubarMenu>
 						<motion.div whileHover={{ scale: 1.05 }}>
-							<MenubarTrigger className="text-base font-medium cursor-pointer Planding mr-2">Features</MenubarTrigger>
+							<MenubarTrigger className="text-sm sm:text-base font-medium cursor-pointer Planding mr-1 sm:mr-2 px-1 sm:px-4">Features</MenubarTrigger>
 						</motion.div>
 						<MenubarContent>
 							<MenubarItem className="cursor-pointer">
@@ -62,24 +76,26 @@ export default function NavBar() {
 					</MenubarMenu>
 
 					<motion.div whileHover={{ scale: 1.05 }}>
-						<Link href={"https://rileygeddes.com"} target="_blank" className="text-base font-medium cursor-pointer">
+						<Link href={"https://rileygeddes.com"} target="_blank" className="text-sm sm:text-base font-medium cursor-pointer px-1 sm:px-4 py-2">
 							About
-						</Link>{" "}
+						</Link>
 					</motion.div>
 
 					<motion.div whileHover={{ scale: 1.05 }}>
-						<Link href="mailto:rileygeddes@virginia.edu" className="text-base font-medium px-4 py-2 flex items-center cursor-pointer">
+						<Link
+							href="mailto:rileygeddes@virginia.edu"
+							className="text-sm sm:text-base font-medium px-1 sm:px-4 py-2 flex items-center cursor-pointer">
 							Contact
 						</Link>
 					</motion.div>
 
-					<div className="mx-4 h-6 w-px bg-gray-300 self-center"></div>
+					<div className="mx-2 sm:mx-4 h-6 w-px bg-gray-300 self-center"></div>
 
 					{isAuthenticated ? (
 						<motion.div whileHover={{ scale: 1.05 }} className="flex items-center">
 							<DropdownMenu>
 								<DropdownMenuTrigger className="focus:outline-none">
-									<Avatar className="h-10 w-10 cursor-pointer">
+									<Avatar className="h-8 w-8 sm:h-10 sm:w-10 cursor-pointer">
 										<AvatarImage src={session?.user?.image || ""} alt="Profile" />
 										<AvatarFallback>{session?.user?.name?.charAt(0) || "U"}</AvatarFallback>
 									</Avatar>
@@ -88,9 +104,9 @@ export default function NavBar() {
 									<DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
 										Switch Theme
 										{theme === "light" ? (
-											<Moon className="text-black dark:text-white" size={20} />
+											<Moon className="text-black dark:text-white ml-2" size={16} />
 										) : (
-											<Sun className="text-black dark:text-white" size={20} />
+											<Sun className="text-black dark:text-white ml-2" size={16} />
 										)}
 									</DropdownMenuItem>
 									<DropdownMenuItem
@@ -111,7 +127,10 @@ export default function NavBar() {
 							className="flex items-center"
 							onMouseEnter={() => setIsHovering(true)}
 							onMouseLeave={() => setIsHovering(false)}>
-							<Button onClick={() => signIn("demo", { callbackUrl: "/vault" })} variant="default" className="">
+							<Button
+								onClick={() => signIn("demo", { callbackUrl: "/vault" })}
+								variant="default"
+								className="text-xs sm:text-sm py-1 sm:py-2 px-2 sm:px-4 h-auto">
 								<AnimatePresence>
 									{isHovering && (
 										<motion.div
