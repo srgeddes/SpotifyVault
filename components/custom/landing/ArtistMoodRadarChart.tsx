@@ -129,7 +129,7 @@ const ArtistMoodRadarChart: React.FC = () => {
 				/>
 			</motion.div>
 			<motion.div
-				className="absolute -top-42 left-0 z-0"
+				className="hidden md:block md:absolute -top-42 left-0 z-0"
 				style={{ width: "300px", height: "325px" }}
 				initial={{ y: 30, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}

@@ -32,7 +32,7 @@ export default function EnterVaultSection() {
 		<>
 			<div className="text-center px-4 sm:px-6" id="enter-vault">
 				<motion.h1
-					className="text-3xl sm:text-4xl md:text-5xl font-bold"
+					className="text-4xl sm:text-4xl md:text-5xl font-bold"
 					initial={{ clipPath: "inset(0% 100% -10% 0%)" }}
 					animate={{ clipPath: "inset(0% 0% -20% 0%)" }}
 					transition={{ duration: 1.5, ease: "easeOut" }}>
@@ -73,7 +73,6 @@ export default function EnterVaultSection() {
 				</motion.div>
 			</div>
 			<div className="w-full max-w-6xl relative flex flex-col">
-				{/* Kendrick Lamar image with responsive positioning */}
 				<div
 					className="absolute z-0 overflow-visible"
 					style={{
@@ -84,8 +83,8 @@ export default function EnterVaultSection() {
 					<motion.div
 						className="relative"
 						style={{
-							width: isMobile ? "320px" : "375px",
-							height: isMobile ? "400px" : "475px",
+							width: isMobile ? "300px" : "375px",
+							height: isMobile ? "375px" : "475px",
 						}}
 						initial={{ y: 30, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}

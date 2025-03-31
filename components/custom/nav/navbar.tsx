@@ -56,7 +56,7 @@ export default function NavBar() {
 				<Menubar className="border-none shadow-none bg-transparent">
 					<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
 						<Link href="/" className="mr-2 sm:mr-6 flex items-center font-bold">
-							<Logo width={isMobile ? 32 : 45} height={isMobile ? 32 : 45} />
+							<Logo width={isMobile ? 28 : 45} height={isMobile ? 28 : 45} />
 						</Link>
 					</motion.div>
 

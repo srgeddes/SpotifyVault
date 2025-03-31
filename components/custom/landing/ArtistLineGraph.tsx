@@ -22,11 +22,9 @@ const artistData = [
 	{ month: "Dec", Drake: 90, "Kendrick Lamar": 230, "Taylor Swift": 220 },
 ];
 
-// Mobile optimized data - fewer months for smaller screens
 const mobileArtistData = [
 	{ month: "Jan", Drake: 250, "Kendrick Lamar": 80, "Taylor Swift": 160 },
 	{ month: "Mar", Drake: 140, "Kendrick Lamar": 150, "Taylor Swift": 190 },
-	{ month: "May", Drake: 170, "Kendrick Lamar": 200, "Taylor Swift": 180 },
 	{ month: "Jul", Drake: 170, "Kendrick Lamar": 220, "Taylor Swift": 240 },
 	{ month: "Sep", Drake: 230, "Kendrick Lamar": 210, "Taylor Swift": 200 },
 	{ month: "Nov", Drake: 130, "Kendrick Lamar": 190, "Taylor Swift": 270 },
@@ -125,7 +123,6 @@ const ArtistLineGraph: React.FC<{ title?: string; description?: string }> = ({
 	const artistNames = useMemo(() => Object.keys(artistColors), [artistColors]);
 	const artistImages = useArtistImages(artistNames);
 
-	// Use different dataset based on screen size
 	const data = isMobile ? mobileArtistData : artistData;
 
 	return (

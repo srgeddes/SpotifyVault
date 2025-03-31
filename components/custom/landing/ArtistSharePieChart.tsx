@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useArtistImages } from "@/hooks/artist/useArtistImages";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const playData = [
 	{ name: "Bruno Mars", value: 45, color: "#5398BE" },
@@ -52,13 +53,14 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, artistIm
 };
 
 const ArtistSharePieChart: React.FC = () => {
+	const isMobile = useMediaQuery("(max-width: 768px)");
 	const artistNames = useMemo(() => playData.map((item) => item.name), []);
 	const artistImages = useArtistImages(artistNames);
 
 	return (
 		<div className="relative h-full">
 			<motion.div
-				className="absolute -top-30 left-0 z-0"
+				className="hidden md:block md:absolute -top-30 left-0 z-0"
 				style={{ width: "200px", height: "200px" }}
 				initial={{ y: 30, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
@@ -90,7 +92,7 @@ const ArtistSharePieChart: React.FC = () => {
 				/>
 			</motion.div>
 
-			<Card className="w-full h-full z-10 relative">
+			<Card className="w-full h-100 md:h-full z-10 relative">
 				<CardHeader className="pb-0 mb-0">
 					<CardTitle>Artist Share of Plays</CardTitle>
 					<CardDescription>Top Artist Listening Distribution</CardDescription>
@@ -107,7 +109,7 @@ const ArtistSharePieChart: React.FC = () => {
 									outerRadius={90}
 									paddingAngle={2}
 									dataKey="value"
-									label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+									label={!isMobile ? ({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%` : false}
 									labelLine={false}>
 									{playData.map((entry, index) => (
 										<Cell key={`cell-${index}`} fill={entry.color} />
