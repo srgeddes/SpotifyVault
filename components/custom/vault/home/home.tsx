@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TopArtists } from "@/hooks/user/topArtists";
 import { TopTracks, TopTrack } from "@/hooks/user/topTracks";
 import { useSession } from "next-auth/react";
@@ -14,8 +15,9 @@ import { useUserData } from "@/hooks/user/useUserData";
 
 export default function Home() {
 	const { data: session } = useSession();
-	const { topArtists, loading: artistsLoading, error: artistsError } = TopArtists("long_term", 5);
-	const { topTracks, loading: tracksLoading, error: tracksError } = TopTracks("long_term", 5);
+	const [timeRange, setTimeRange] = useState("long_term");
+	const { topArtists, loading: artistsLoading, error: artistsError } = TopArtists(timeRange, 5);
+	const { topTracks, loading: tracksLoading, error: tracksError } = TopTracks(timeRange, 5);
 	const { minutesListened, loading: minutesLoading, error: minutesError } = useMinutesListened(10000);
 	const { percentileData, error: percentileError } = useListeningPercentile(10000);
 	const { undergroundScore, error: undergroundScoreError } = useUndergroundScore();
@@ -27,6 +29,7 @@ export default function Home() {
 				day: "numeric",
 		  })
 		: "";
+
 	if (artistsError || tracksError) {
 		return (
 			<Card className="w-full mx-auto p-6">
@@ -49,10 +52,30 @@ export default function Home() {
 			) : (
 				<>
 					<CardHeader className="flex flex-row-reverse justify-between items-center pb-6">
-						<Avatar className="w-50 h-50">
-							<AvatarImage src={session?.user?.image || "/default-avatar.png"} alt={`${session?.user?.name}'s profile`} className="object-cover" />
-							<AvatarFallback className="text-4xl">{session?.user?.name?.charAt(0) || "U"}</AvatarFallback>
-						</Avatar>
+						<div className="flex flex-col items-center">
+							<Avatar className="w-50 h-50">
+								<AvatarImage src={session?.user?.image || "/default-avatar.png"} alt={`${session?.user?.name}'s profile`} className="object-cover" />
+								<AvatarFallback className="text-4xl">{session?.user?.name?.charAt(0) || "U"}</AvatarFallback>
+							</Avatar>
+							<div className="mt-5">
+								<Select value={timeRange} onValueChange={(value) => setTimeRange(value)}>
+									<SelectTrigger className="cursor-pointer">
+										<SelectValue placeholder="Time Range" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem className="cursor-pointer" value="long_term">
+											All Time
+										</SelectItem>
+										<SelectItem className="cursor-pointer" value="medium_term">
+											Medium Term
+										</SelectItem>
+										<SelectItem className="cursor-pointer" value="short_term">
+											Short Term
+										</SelectItem>
+									</SelectContent>
+								</Select>
+							</div>
+						</div>
 
 						<div>
 							<CardTitle className="text-3xl mb-4">

@@ -91,7 +91,7 @@ export const GenreDistributionPieChartThumbnail: React.FC<GenreDistributionPieCh
 								nameKey="name"
 								cx="50%"
 								cy="50%"
-								outerRadius={80}
+								outerRadius={70}
 								innerRadius={20}
 								fill={pieColor}
 								label={false}>

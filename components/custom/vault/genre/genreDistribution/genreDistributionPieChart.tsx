@@ -222,7 +222,9 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 						<div>
 							{artistImageUrl && (
 								<div className="mt-2 flex justify-center">
-									<Image src={artistImageUrl} alt="Artist" width={80} height={80} className="rounded-full object-fill" />
+									<div className="w-20 h-20 relative rounded-full overflow-hidden">
+										<Image src={artistImageUrl} alt="Artist" layout="fill" objectFit="cover" />
+									</div>{" "}
 								</div>
 							)}
 						</div>
