@@ -12,6 +12,8 @@ import { useUndergroundScore } from "@/hooks/user/underground-score";
 import CardLoader from "../../CardLoader";
 import { SpotifyLink } from "../../SpotifyLink";
 import { useUserData } from "@/hooks/user/useUserData";
+import { CircleHelp } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 export default function Home() {
 	const { data: session } = useSession();
@@ -104,7 +106,22 @@ export default function Home() {
 									<p className="text-2xl">{percentileData?.rank}</p>
 								)}
 
-								<h3 className="text-xl font-bold mt-4 mb-4">Underground Score</h3>
+								<h3 className="text-xl font-bold mt-4 mb-4 flex items-center">
+									Underground Score
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<CircleHelp className="ml-1 h-4 w-4" />
+											</TooltipTrigger>
+											<TooltipContent className="bg-neutral-600 text-white p-2 rounded-xl shadow-md w-60">
+												<p className="text-sm">
+													Your underground score measures how unique your listening habits are (0-100). A higher score indicates that your music taste
+													is more mainstream.
+												</p>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								</h3>
 								{undergroundScoreError ? (
 									<p className="text-muted-foreground">Error loading Underground Score</p>
 								) : (
@@ -147,13 +164,15 @@ export default function Home() {
 										{topTracks.map((track: TopTrack) => (
 											<div key={track.id} className="flex items-center space-x-3">
 												<div className="w-16 h-16 flex-shrink-0 relative rounded-lg overflow-hidden shadow-md">
-													<Image
-														src={track.album.images?.[0]?.url || "/placeholder-track.png"}
-														alt={track.name}
-														layout="fill"
-														objectFit="cover"
-														className="transition-transform duration-300 hover:scale-110"
-													/>
+													<SpotifyLink id={track.id} externalUrl={track.external_urls.spotify} type="track">
+														<Image
+															src={track.album.images?.[0]?.url || "/placeholder-track.png"}
+															alt={track.name}
+															layout="fill"
+															objectFit="cover"
+															className="transition-transform duration-300 hover:scale-110"
+														/>
+													</SpotifyLink>
 												</div>
 												<SpotifyLink id={track.id} externalUrl={track.external_urls.spotify} type="track">
 													{track.name}

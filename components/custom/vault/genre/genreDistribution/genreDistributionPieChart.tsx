@@ -61,11 +61,116 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 	const [textColor, setTextColor] = useState<string>(resolvedTheme === "dark" ? "#ffffff" : "#000000");
 
 	const colorPalettes: Record<string, string[]> = {
-		Default: ["#012A4A", "#013A63", "#01497C", "#014F86", "#2A6F97", "#2C7DA0", "#468FAF", "#61A5C2", "#89C2D9", "#A9D6E5"],
-		Grayscale: ["#F8F9FA", "#E9ECEF", "#DEE2E6", "#CED4DA", "#ADB5BD", "#6C757D", "#495057", "#343A40", "#212529"],
-		Pastel: ["#FEC5BB", "#FCD5CE", "#FAE1DD", "#F8EDEB", "#E8E8E4", "#D8E2DC", "#ECE4DB", "#FFE5D9", "#FFD7BA", "#FEC89A"],
-		Green: ["#D9ED92", "#B5E48C", "#99D98C", "#76C893", "#52B69A", "#34A0A4", "#168AAD", "#1A759F", "#1E6091", "#184E77"],
-		Red: ["#03071E", "#370617", "#6A040F", "#9D0208", "#D00000", "#DC2F02", "#E85D04", "#F48C06", "#FAA307", "#FFBA08"],
+		Default: [
+			"#012A4A",
+			"#01324F",
+			"#013A63",
+			"#01426F",
+			"#01497C",
+			"#014C81",
+			"#014F86",
+			"#1A5C8C",
+			"#2A6F97",
+			"#2B769C",
+			"#2C7DA0",
+			"#3986A7",
+			"#468FAF",
+			"#5399B8",
+			"#61A5C2",
+			"#75B3CE",
+			"#89C2D9",
+			"#99CCDF",
+			"#A9D6E5",
+			"#B9E0EC",
+		],
+		Grayscale: [
+			"#F8F9FA",
+			"#F1F3F5",
+			"#E9ECEF",
+			"#E3E7EB",
+			"#DEE2E6",
+			"#D5DBE0",
+			"#CED4DA",
+			"#BDC5CC",
+			"#ADB5BD",
+			"#8D98A0",
+			"#6C757D",
+			"#5D656C",
+			"#495057",
+			"#40464C",
+			"#343A40",
+			"#2C3135",
+			"#212529",
+			"#1B1F22",
+			"#16191C",
+			"#101214",
+		],
+		Pastel: [
+			"#FEC5BB",
+			"#FEC9BF",
+			"#FCD5CE",
+			"#FCDAD5",
+			"#FAE1DD",
+			"#F9E5E1",
+			"#F8EDEB",
+			"#F0EBE7",
+			"#E8E8E4",
+			"#E0E5E0",
+			"#D8E2DC",
+			"#E0E3DE",
+			"#ECE4DB",
+			"#F3E6DF",
+			"#FFE5D9",
+			"#FFDFCC",
+			"#FFD7BA",
+			"#FFD0AF",
+			"#FEC89A",
+			"#FECDA5",
+		],
+		Green: [
+			"#D9ED92",
+			"#CEEB8F",
+			"#B5E48C",
+			"#A7E08C",
+			"#99D98C",
+			"#8ACE8F",
+			"#76C893",
+			"#64C096",
+			"#52B69A",
+			"#43AB9D",
+			"#34A0A4",
+			"#2795A1",
+			"#168AAD",
+			"#1882A6",
+			"#1A759F",
+			"#1C6C98",
+			"#1E6091",
+			"#1B5584",
+			"#184E77",
+			"#15476D",
+		],
+		Red: [
+			"#03071E",
+			"#1D0A1A",
+			"#370617",
+			"#502511",
+			"#6A040F",
+			"#82020C",
+			"#9D0208",
+			"#B70104",
+			"#D00000",
+			"#D61701",
+			"#DC2F02",
+			"#E34603",
+			"#E85D04",
+			"#EB7505",
+			"#F48C06",
+			"#F79907",
+			"#FAA307",
+			"#FCB107",
+			"#FFBA08",
+			"#FFC21A",
+		],
 	};
 
 	const [currentPalette, setCurrentPalette] = useState<string>("Default");
@@ -164,12 +269,16 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 			if (!primaryGenre || primaryGenre === "") return;
 			distribution[primaryGenre] = (distribution[primaryGenre] || 0) + 1;
 		});
-		return Object.entries(distribution).map(
-			([genre, count]: [string, number]): GenreDistributionItem => ({
-				name: genre,
-				value: count,
-			})
-		);
+
+		// Convert to array and sort by value in descending order
+		return Object.entries(distribution)
+			.map(
+				([genre, count]: [string, number]): GenreDistributionItem => ({
+					name: genre,
+					value: count,
+				})
+			)
+			.sort((a: GenreDistributionItem, b: GenreDistributionItem): number => b.value - a.value);
 	}, [trackPlays, artistPrimaryGenres]);
 
 	const totalPlays: number = useMemo((): number => {
@@ -303,7 +412,7 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 								formatter={(value: string): JSX.Element => (
 									<span
 										style={{
-											color: currentPalette === "Default" || currentPalette === "Red" ? "#000000" : textColor,
+											color: resolvedTheme === "dark" ? "#ffffff" : "#000000",
 											marginLeft: "4px",
 										}}>
 										{value}
