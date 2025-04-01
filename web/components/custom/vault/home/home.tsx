@@ -56,7 +56,7 @@ export default function Home() {
 					<CardHeader className="flex flex-row-reverse justify-between items-center pb-6">
 						<div className="flex flex-col items-center">
 							<Avatar className="w-50 h-50">
-								<AvatarImage src={session?.user?.image || "/default-avatar.png"} alt={`${session?.user?.name}'s profile`} className="object-cover" />
+								<AvatarImage src={session?.user?.image || ""} alt={`${session?.user?.name}'s profile`} className="object-cover" />
 								<AvatarFallback className="text-4xl">{session?.user?.name?.charAt(0) || "U"}</AvatarFallback>
 							</Avatar>
 							<div className="mt-5">
