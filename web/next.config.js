@@ -1,13 +1,14 @@
-import type { NextConfig } from "next";
+const path = require("path");
 
-require("dotenv").config({ path: "../.env" });
+if (process.env.NODE_ENV !== "production") {
+	require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+}
 
-const nextConfig: NextConfig = {
+module.exports = {
 	scope: "user-read-email user-top-read",
 	images: {
 		domains: ["i.scdn.co"],
 	},
-
 	env: {
 		NEXTAUTH_DEBUG: process.env.NEXTAUTH_DEBUG,
 		NEXTAUTH_URL: process.env.NEXTAUTH_URL,
@@ -25,5 +26,3 @@ const nextConfig: NextConfig = {
 		DYNAMODB_ARTIST_METADATA_TABLE: process.env.DYNAMODB_ARTIST_METADATA_TABLE,
 	},
 };
-
-export default nextConfig;
