@@ -77,7 +77,7 @@ export default function EnterVaultSection() {
 					className="absolute z-0 overflow-visible"
 					style={{
 						left: "50%",
-						top: isMobile ? "-60px" : "-79px",
+						top: isMobile ? "-60px" : "-50px",
 						transform: "translateX(-50%)",
 					}}>
 					<motion.div
