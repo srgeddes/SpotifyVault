@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 require("dotenv").config({ path: "../.env" });
 
 const nextConfig: NextConfig = {
-	scope: "user-read-email user-top-read",
 	images: {
 		domains: ["i.scdn.co"],
 	},
