@@ -304,8 +304,8 @@ async function getOrCacheArtistMetadata(artist: any, accessToken: string): Promi
 
 export async function updateUserSpotifyData(user: any): Promise<void> {
 	await updatePlayedTracks(user);
-	await updateSavedTracks(user);
-	await updateArtistFollows(user);
+	// await updateSavedTracks(user);
+	// await updateArtistFollows(user);
 	await updatePlaylistPlays(user);
 	await updatePlaylists(user);
 }

@@ -8,11 +8,11 @@ import { useTrackPlays } from "@/hooks/user/track-plays";
 import { useTheme } from "next-themes";
 import Loading from "@/components/custom/loading";
 
-export interface ArtistPlaysChartThumbnailProps {
+export interface ArtistPlaysChartOvertimeThumbnailProps {
 	chartName: string;
 }
 
-export const ArtistPlaysChartThumbnail: React.FC<ArtistPlaysChartThumbnailProps> = ({ chartName }) => {
+export const ArtistPlaysChartOvertimeThumbnail: React.FC<ArtistPlaysChartOvertimeThumbnailProps> = ({ chartName }) => {
 	const { trackPlays, isLoading, isError } = useTrackPlays();
 	const { resolvedTheme } = useTheme();
 
@@ -24,7 +24,6 @@ export const ArtistPlaysChartThumbnail: React.FC<ArtistPlaysChartThumbnailProps>
 		setAxisColor(resolvedTheme === "dark" ? "#ffffff" : "#000000");
 	}, [resolvedTheme]);
 
-	// Determine the top artist using artistIds from track plays
 	const artistsWithPlayCounts = useMemo(() => {
 		if (!trackPlays) return [];
 		const counts: Record<string, number> = {};
@@ -35,7 +34,6 @@ export const ArtistPlaysChartThumbnail: React.FC<ArtistPlaysChartThumbnailProps>
 					if (id) counts[id] = (counts[id] || 0) + 1;
 				});
 			} else {
-				// Fallback to artistName or trackId if artistIds is not available
 				const name = play.artistName ?? play.trackId;
 				counts[name] = (counts[name] || 0) + 1;
 			}
@@ -51,7 +49,6 @@ export const ArtistPlaysChartThumbnail: React.FC<ArtistPlaysChartThumbnailProps>
 		return artistsWithPlayCounts.sort((a, b) => b.playCount - a.playCount)[0].id;
 	}, [artistsWithPlayCounts]);
 
-	// Filter track plays for the top artist
 	const filteredTrackPlays = useMemo(() => {
 		if (!trackPlays || !topArtistId) return [];
 		return trackPlays.filter((play: { artistIds?: string; playedAt: string }) => {
@@ -63,7 +60,6 @@ export const ArtistPlaysChartThumbnail: React.FC<ArtistPlaysChartThumbnailProps>
 		});
 	}, [trackPlays, topArtistId]);
 
-	// Group filtered track plays by day
 	const groupedData = useMemo(() => {
 		if (!filteredTrackPlays) return {};
 		return filteredTrackPlays.reduce((acc: Record<string, number>, play: { playedAt: string }) => {
@@ -125,13 +121,7 @@ export const ArtistPlaysChartThumbnail: React.FC<ArtistPlaysChartThumbnailProps>
 									style: { fill: axisColor, fontSize: "14px" },
 								}}
 							/>
-							<Line
-								type="monotone"
-								dataKey="plays"
-								stroke={lineColor}
-								strokeWidth={3}
-								dot={false} // remove points on the line
-							/>
+							<Line type="monotone" dataKey="plays" stroke={lineColor} strokeWidth={3} dot={false} />
 						</LineChart>
 					</ResponsiveContainer>
 				</CardContent>
@@ -140,4 +130,4 @@ export const ArtistPlaysChartThumbnail: React.FC<ArtistPlaysChartThumbnailProps>
 	);
 };
 
-export default ArtistPlaysChartThumbnail;
+export default ArtistPlaysChartOvertimeThumbnail;

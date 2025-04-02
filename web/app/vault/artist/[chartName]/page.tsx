@@ -1,5 +1,5 @@
 "use client";
-import ArtistPlaysChart from "@/components/custom/vault/artist/artistPlays/artistPlaysChart";
+import ArtistPlaysChart from "@/components/custom/vault/artist/artistPlaysOvertime/artistPlaysOvertimeChart";
 import { useParams } from "next/navigation";
 
 const ArtistChartDetailPage: React.FC = () => {
@@ -16,7 +16,7 @@ const ArtistChartDetailPage: React.FC = () => {
 
 	return (
 		<div>
-			<div className="container mx-auto flex flex-col items-center justify-center p-4 min-h-full">
+			<div className="mx-auto flex flex-col items-center justify-center p-4 min-h-full">
 				{chartName === "artist-plays" ? <ArtistPlaysChart chartName={displayChartName} /> : null}
 			</div>
 		</div>

@@ -1,5 +1,14 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, QueryCommand, PutCommand, ScanCommand, GetCommand, BatchGetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import {
+	DynamoDBDocumentClient,
+	QueryCommand,
+	PutCommand,
+	ScanCommand,
+	GetCommand,
+	BatchGetCommand,
+	UpdateCommand,
+	BatchWriteCommand,
+} from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(client);

@@ -1,4 +1,4 @@
-import ArtistPlaysChartThumbnail from "@/components/custom/vault/artist/artistPlays/artistPlaysChartThumnail";
+import ArtistPlaysChartThumbnail from "@/components/custom/vault/artist/artistPlaysOvertime/artistPlaysOvertimeChartThumnail";
 
 const ArtistVault: React.FC = () => {
 	const chartNames = ["artist-plays"];

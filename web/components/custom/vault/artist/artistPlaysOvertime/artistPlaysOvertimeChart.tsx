@@ -23,9 +23,10 @@ interface CustomTooltipProps {
 	aggregation: string;
 	image?: string;
 	artistName?: string;
+	dataType: "plays" | "minutes";
 }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, aggregation, image, artistName }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, aggregation, image, artistName, dataType }) => {
 	if (active && payload && payload.length) {
 		return (
 			<div className="flex flex-col justify-center items-center">
@@ -51,8 +52,9 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, a
 					<div className="">
 						{artistName && <p className="text-sm font-medium">{artistName}</p>}
 						<p className="font-medium text-sm">
-							Track Plays: <span className="font-semibold">{payload[0].value}</span>
-						</p>
+							{dataType === "plays" ? "Track Plays:" : "Minutes Listened:"}{" "}
+							<span className="font-semibold">{dataType === "minutes" ? Number(payload[0].value).toFixed(2) : payload[0].value}</span>
+						</p>{" "}
 					</div>
 				</div>
 			</div>
@@ -74,16 +76,10 @@ interface TrackPlay {
 	playedAt: string;
 	trackId?: string;
 	trackName?: string;
+	duration?: number;
 }
 
-// interface Artist {
-//  id: string;
-//  name: string;
-//  imageUrl?: string;
-//  playCount: number;
-// }
-
-export const ArtistPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) => {
+export const ArtistPlaysOvertimeChart: React.FC<{ chartName: string }> = ({ chartName }) => {
 	const { trackPlays, isLoading, isError } = useTrackPlays();
 	const { resolvedTheme } = useTheme();
 	const [timePeriod, setTimePeriod] = useState("all");
@@ -94,6 +90,7 @@ export const ArtistPlaysChart: React.FC<{ chartName: string }> = ({ chartName })
 	const [aggregation, setAggregation] = useState("day");
 	const [lineColor, setLineColor] = useState(resolvedTheme === "dark" ? "#ffffff" : "#000000");
 	const [selectedArtistId, setSelectedArtistId] = useState<string | null>(null);
+	const [dataType, setDataType] = useState<"plays" | "minutes">("plays");
 
 	useEffect(() => {
 		setLineColor(resolvedTheme === "dark" ? "#ffffff" : "#000000");
@@ -172,10 +169,16 @@ export const ArtistPlaysChart: React.FC<{ chartName: string }> = ({ chartName })
 				dateKey = format(dateObj, "yyyy");
 			}
 
-			acc[dateKey] = (acc[dateKey] || 0) + 1;
+			if (dataType === "plays") {
+				acc[dateKey] = (acc[dateKey] || 0) + 1;
+			} else {
+				const minutesPlayed = play.duration ? play.duration / 60000 : 0;
+				acc[dateKey] = (acc[dateKey] || 0) + minutesPlayed;
+			}
+
 			return acc;
 		}, {});
-	}, [filteredTrackPlays, timePeriod, dateRange, aggregation]);
+	}, [filteredTrackPlays, timePeriod, dateRange, aggregation, dataType]);
 
 	const chartData = useMemo(() => {
 		return Object.entries(groupedData)
@@ -250,6 +253,23 @@ export const ArtistPlaysChart: React.FC<{ chartName: string }> = ({ chartName })
 						</SelectItem>
 					</SelectContent>
 				</Select>
+				<Select
+					value={dataType}
+					onValueChange={(value) => {
+						setDataType(value as "plays" | "minutes");
+					}}>
+					<SelectTrigger className="w-[100px] border rounded p-1 text-sm cursor-pointer text-center">
+						<SelectValue placeholder="Data Type" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="plays" className="cursor-pointer text-center">
+							Plays
+						</SelectItem>
+						<SelectItem value="minutes" className="cursor-pointer text-center">
+							Minutes
+						</SelectItem>
+					</SelectContent>
+				</Select>
 				{timePeriod === "dates" && (
 					<Popover>
 						<PopoverTrigger asChild>
@@ -308,7 +328,7 @@ export const ArtistPlaysChart: React.FC<{ chartName: string }> = ({ chartName })
 			</CardHeader>
 
 			<CardContent>
-				<div className="h-150">
+				<div className="h-[66vh]">
 					<ResponsiveContainer width="100%" height="100%">
 						<LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 							<CartesianGrid strokeDasharray="3 3" vertical={false} stroke={lineColor} opacity={0.1} />
@@ -345,7 +365,7 @@ export const ArtistPlaysChart: React.FC<{ chartName: string }> = ({ chartName })
 								domain={[0, yAxisUpperBound]}
 								ticks={ticks}
 								label={{
-									value: "Track Plays",
+									value: dataType === "plays" ? "Track Plays" : "Minutes Listened",
 									angle: -90,
 									position: "insideLeft",
 									offset: -5,
@@ -359,6 +379,7 @@ export const ArtistPlaysChart: React.FC<{ chartName: string }> = ({ chartName })
 										aggregation={aggregation}
 										image={selectedArtistMetadata && selectedArtistMetadata[0]?.imageUrl}
 										artistName={selectedArtistName}
+										dataType={dataType}
 									/>
 								}
 							/>
@@ -378,7 +399,7 @@ export const ArtistPlaysChart: React.FC<{ chartName: string }> = ({ chartName })
 
 			<CardFooter>
 				<div className="text-sm">
-					Average of {averagePlays} plays per{" "}
+					Average of {averagePlays} {dataType === "plays" ? "plays" : "minutes"} per{" "}
 					{aggregation === "day" ? "day" : aggregation === "week" ? "week" : aggregation === "month" ? "month" : "year"}
 				</div>
 			</CardFooter>
@@ -386,4 +407,4 @@ export const ArtistPlaysChart: React.FC<{ chartName: string }> = ({ chartName })
 	);
 };
 
-export default ArtistPlaysChart;
+export default ArtistPlaysOvertimeChart;

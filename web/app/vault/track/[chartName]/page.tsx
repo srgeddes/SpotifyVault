@@ -18,7 +18,7 @@ const TrackChartDetailPage: React.FC = () => {
 
 	return (
 		<div>
-			<div className="container mx-auto flex flex-col items-center justify-center p-4 min-h-full">
+			<div className="w-full mx-auto flex flex-col items-center justify-center p-4 min-h-full">
 				{chartName === "track-plays" ? (
 					<TrackPlaysChart chartName={displayChartName} />
 				) : chartName === "track-duration" ? (

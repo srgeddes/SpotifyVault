@@ -90,7 +90,7 @@ export const TopTracksChart: React.FC<{ chartName: string }> = ({ chartName }) =
 				<CardDescription>Top 20 tracks by play count</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<div className="h-150">
+				<div className="h-[66vh]">
 					<ResponsiveContainer width="100%" height="100%">
 						<BarChart data={topTracksData} margin={{ top: 5, right: 30, left: 20, bottom: 80 }}>
 							<Tooltip content={<CustomTooltip />} />

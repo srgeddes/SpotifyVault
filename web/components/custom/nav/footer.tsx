@@ -4,7 +4,6 @@ import { Github, Mail, Sun, Moon } from "lucide-react";
 import Logo from "@/components/custom/logo";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
 
 export default function Footer() {
 	const currentYear = new Date().getFullYear();

@@ -123,7 +123,7 @@ export const authOptions: NextAuthOptions = {
 		async signIn({ account, profile }) {
 			if (account?.provider === "demo") return true;
 			const spotifyProfile = profile as SpotifyProfile | null;
-			const userId = spotifyProfile?.display_name;
+			const userId = spotifyProfile?.id;
 			if (!userId) return false;
 			const newUser: User = {
 				id: userId,

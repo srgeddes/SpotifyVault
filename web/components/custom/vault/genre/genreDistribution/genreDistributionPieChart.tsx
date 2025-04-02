@@ -411,7 +411,7 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 				</DropdownMenu>
 			</CardHeader>
 			<CardContent>
-				<div className="h-150">
+				<div className="h-[66vh]">
 					<ResponsiveContainer width="100%" height="100%">
 						<PieChart>
 							<Pie
