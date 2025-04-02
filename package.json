@@ -1,58 +1,12 @@
 {
-  "name": "spotify-vault",
-  "version": "0.1.0",
-  "private": true,
-  "workspaces": [
-    "cdk"
-  ],
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.774.0",
-    "@aws-sdk/lib-dynamodb": "^3.774.0",
-    "@prisma/client": "^6.5.0",
-    "@radix-ui/react-avatar": "^1.1.3",
-    "@radix-ui/react-dialog": "^1.1.6",
-    "@radix-ui/react-dropdown-menu": "^2.1.6",
-    "@radix-ui/react-menubar": "^1.1.6",
-    "@radix-ui/react-popover": "^1.1.6",
-    "@radix-ui/react-select": "^2.1.6",
-    "@radix-ui/react-separator": "^1.1.2",
-    "@radix-ui/react-slot": "^1.1.2",
-    "@radix-ui/react-tooltip": "^1.1.8",
-    "@tailwindcss/cli": "^4.0.14",
-    "axios": "^1.8.3",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "date-fns": "^4.1.0",
-    "framer-motion": "^12.5.0",
-    "iron-session": "^7.0.0",
-    "lucide-react": "^0.483.0",
-    "next": "15.2.2",
-    "next-auth": "^4.24.11",
-    "next-themes": "^0.4.6",
-    "react": "^19.0.0",
-    "react-day-picker": "8.10.1",
-    "react-dom": "^19.0.0",
-    "recharts": "^2.15.1",
-    "styled-components": "^6.1.16",
-    "swr": "^2.3.3",
-    "tailwind-merge": "^3.0.2",
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.2.2",
-    "tailwindcss": "^4.0.14",
-    "typescript": "^5"
-  }
+	"name": "spotify-vault",
+	"version": "0.1.0",
+	"private": true,
+	"workspaces": [
+		"cdk",
+		"web"
+	],
+	"dependencies": {
+		"dotenv": "^16.4.7"
+	}
 }
