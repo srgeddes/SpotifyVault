@@ -77,7 +77,7 @@ export default function EnterVaultSection() {
 					className="absolute z-0 overflow-visible"
 					style={{
 						left: "50%",
-						top: isMobile ? "-60px" : "-50px",
+						top: isMobile ? "-60px" : "-79px",
 						transform: "translateX(-50%)",
 					}}>
 					<motion.div
@@ -101,7 +101,6 @@ export default function EnterVaultSection() {
 					</motion.div>
 				</div>
 
-				{/* Desktop only artist images */}
 				<div className="absolute z-0 overflow-visible hidden md:block" style={{ left: "25%", top: "-25px", transform: "translateX(-50%)" }}>
 					<motion.div
 						className="relative"

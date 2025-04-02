@@ -4,6 +4,7 @@ import { Github, Mail, Sun, Moon } from "lucide-react";
 import Logo from "@/components/custom/logo";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 
 export default function Footer() {
 	const currentYear = new Date().getFullYear();
@@ -52,7 +53,7 @@ export default function Footer() {
 								<span className="sr-only">Email</span>
 							</Link>
 						</motion.div>
-						<button onClick={toggleTheme} className="p-0 lg:p-2">
+						<button onClick={toggleTheme} className="p-0 lg:p-2 cursor-pointer">
 							{theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
 						</button>
 					</div>
@@ -97,7 +98,7 @@ export default function Footer() {
 								Contact
 							</Link>
 						</motion.div>
-						<button onClick={toggleTheme} className="p-0 lg:p-2">
+						<button onClick={toggleTheme} className="p-0 lg:p-2 cursor-pointer">
 							{theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
 						</button>
 					</div>

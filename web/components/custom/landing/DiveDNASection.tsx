@@ -5,7 +5,7 @@ import ArtistSharePieChart from "./ArtistSharePieChart";
 
 export default function DiveDNASection() {
 	return (
-		<div className="w-5/6 max-w-8xl mx-auto relative min-h-screen" id="dive-dna">
+		<div className="w-5/6 max-w-8xl mx-auto relative" id="dive-dna">
 			<div className="w-full mt-20 text-left px-6 py-10">
 				<motion.h1
 					className="text-3xl md:text-5xl font-bold"
