@@ -110,7 +110,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 
 	const chartData = useMemo(() => {
 		return Object.entries(groupedData)
-			.map(([date, songs]) => ({ date, songs }))
+			.map(([date, tracks]) => ({ date, tracks }))
 			.sort((a, b) => a.date.localeCompare(b.date));
 	}, [groupedData]);
 
@@ -119,9 +119,9 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 	if (!trackPlays || trackPlays.length === 0) return <div>No track plays data available</div>;
 
 	const tickInterval = chartData.length > 60 ? Math.floor(chartData.length / 30) : 0;
-	const maxSongs = chartData.reduce((max, item) => Math.max(max, item.songs), 0);
+	const maxSongs = chartData.reduce((max, item) => Math.max(max, item.tracks), 0);
 	const yAxisUpperBound = Math.ceil(maxSongs / 10) * 12;
-	const totalValue = chartData.reduce((sum, item) => sum + item.songs, 0);
+	const totalValue = chartData.reduce((sum, item) => sum + item.tracks, 0);
 	const averageValue = Math.round(totalValue / chartData.length);
 
 	const tickStep = 5;
@@ -271,7 +271,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 								}}
 							/>
 							<YAxis
-								dataKey="songs"
+								dataKey="plays"
 								stroke={lineColor}
 								tickLine={false}
 								axisLine={false}
@@ -296,7 +296,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 							/>
 							<Area
 								type="monotone"
-								dataKey="songs"
+								dataKey="tracks"
 								stroke={lineColor}
 								fill={lineColor}
 								fillOpacity={0.2}
@@ -311,7 +311,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 
 			<CardFooter>
 				<div className="text-sm">
-					Average of {averageValue} {dataType === "plays" ? "songs" : "minutes"} per{" "}
+					Average of {averageValue} {dataType === "plays" ? "tracks" : "minutes"} per{" "}
 					{aggregation === "day" ? "day" : aggregation === "week" ? "week" : aggregation === "month" ? "month" : "year"}
 				</div>
 			</CardFooter>

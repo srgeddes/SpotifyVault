@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, AreaChart, Area } from "recharts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -76,7 +76,7 @@ interface TrackPlay {
 	playedAt: string;
 	trackId?: string;
 	trackName?: string;
-	duration?: number;
+	durationMs?: number;
 }
 
 export const ArtistPlaysOvertimeChart: React.FC<{ chartName: string }> = ({ chartName }) => {
@@ -152,9 +152,9 @@ export const ArtistPlaysOvertimeChart: React.FC<{ chartName: string }> = ({ char
 		return filteredTrackPlays.reduce((acc: Record<string, number>, play: TrackPlay) => {
 			const dateObj = new Date(play.playedAt);
 			if (timePeriod === "dates" && dateRange.from && dateRange.to) {
-				const playDate = dateObj.toISOString().slice(0, 10);
-				const fromDate = dateRange.from.toISOString().slice(0, 10);
-				const toDate = dateRange.to.toISOString().slice(0, 10);
+				const playDate = format(dateObj, "yyyy-MM-dd");
+				const fromDate = format(dateRange.from, "yyyy-MM-dd");
+				const toDate = format(dateRange.to, "yyyy-MM-dd");
 				if (playDate < fromDate || playDate > toDate) return acc;
 			}
 
@@ -172,7 +172,7 @@ export const ArtistPlaysOvertimeChart: React.FC<{ chartName: string }> = ({ char
 			if (dataType === "plays") {
 				acc[dateKey] = (acc[dateKey] || 0) + 1;
 			} else {
-				const minutesPlayed = play.duration ? play.duration / 60000 : 0;
+				const minutesPlayed = play.durationMs ? play.durationMs / 60000 : 0;
 				acc[dateKey] = (acc[dateKey] || 0) + minutesPlayed;
 			}
 
@@ -330,7 +330,7 @@ export const ArtistPlaysOvertimeChart: React.FC<{ chartName: string }> = ({ char
 			<CardContent>
 				<div className="h-[66vh]">
 					<ResponsiveContainer width="100%" height="100%">
-						<LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+						<AreaChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 							<CartesianGrid strokeDasharray="3 3" vertical={false} stroke={lineColor} opacity={0.1} />
 							<XAxis
 								dataKey="date"
@@ -384,15 +384,17 @@ export const ArtistPlaysOvertimeChart: React.FC<{ chartName: string }> = ({ char
 								}
 							/>
 							<Legend wrapperStyle={{ paddingTop: 40, visibility: "hidden" }} />
-							<Line
+							<Area
 								type="monotone"
 								dataKey="plays"
 								stroke={lineColor}
+								fill={lineColor}
+								fillOpacity={0.2}
 								strokeWidth={3}
-								dot={{ r: 4 }}
+								dot={{ r: 2 }}
 								activeDot={{ r: 8, stroke: lineColor, strokeWidth: 2 }}
 							/>
-						</LineChart>
+						</AreaChart>
 					</ResponsiveContainer>
 				</div>
 			</CardContent>
