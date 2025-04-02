@@ -23,7 +23,7 @@ export default function Home() {
 	const { minutesListened, loading: minutesLoading, error: minutesError } = useMinutesListened(10000);
 	const { percentileData, error: percentileError } = useListeningPercentile(10000);
 	const { undergroundScore, error: undergroundScoreError } = useUndergroundScore();
-	const { user } = useUserData(session?.user?.name || "");
+	const { user } = useUserData(session?.user?.id || "");
 	const formattedJoinedAtDate = user?.createdAt
 		? new Date(user.createdAt).toLocaleDateString(undefined, {
 				year: "numeric",
