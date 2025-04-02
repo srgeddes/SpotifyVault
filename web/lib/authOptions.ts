@@ -93,7 +93,7 @@ export const authOptions: NextAuthOptions = {
 			name: "Demo Account",
 			credentials: {},
 			async authorize() {
-				const mainAccountId = "srgeddes";
+				const mainAccountId = "glenvar2022";
 				const userFromDB = await getUserById(mainAccountId);
 				if (!userFromDB || !userFromDB.refreshToken) {
 					throw new Error("Demo user not found in database or refresh token is missing");
@@ -176,7 +176,7 @@ export const authOptions: NextAuthOptions = {
 			mySession.accessToken = myToken.accessToken;
 			mySession.error = myToken.error;
 			if (myToken.demo) {
-				mySession.user.id = "srgeddes";
+				mySession.user.id = "glenvar2022";
 				mySession.user.name = "Demo User";
 				mySession.user.image = "/images/demo_user_profile.jpg";
 			}
