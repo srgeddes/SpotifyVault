@@ -82,7 +82,7 @@ export const authOptions: NextAuthOptions = {
 			authorization:
 				"https://accounts.spotify.com/authorize?scope=user-read-email%20user-read-private%20user-top-read%20user-read-recently-played%20user-library-read%20playlist-read-private%20playlist-read-collaborative%20user-follow-read%20user-read-playback-state%20user-read-currently-playing",
 			profile: (profile) => ({
-				id: profile.display_name,
+				id: profile.id,
 				name: profile.display_name,
 				email: profile.email,
 				image: profile.images?.[0]?.url,
