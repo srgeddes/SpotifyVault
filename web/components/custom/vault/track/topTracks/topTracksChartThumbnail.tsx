@@ -38,7 +38,7 @@ export const TopTracksChartThumbnail: React.FC<TopTracksChartThumbnailProps> = (
 		return Object.values(counts)
 			.sort((a, b) => b.count - a.count)
 			.slice(0, 20)
-			.sort((a, b) => a.trackName.localeCompare(b.trackName));
+			.sort((a, b) => b.count - a.count);
 	}, [trackPlays]);
 
 	if (isLoading) return <Loading />;

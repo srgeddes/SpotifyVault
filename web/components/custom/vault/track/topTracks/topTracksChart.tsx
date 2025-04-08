@@ -59,7 +59,7 @@ export const TopTracksChart: React.FC<{ chartName: string }> = ({ chartName }) =
 					externalUrl: `https://open.spotify.com/track/${track.trackId}`,
 				};
 			})
-			.sort((a, b) => a.trackName.localeCompare(b.trackName));
+			.sort((a, b) => b.count - a.count);
 	}, [groupedData, metadata]);
 
 	if (isLoading || isMetaLoading) return <Loading />;
@@ -73,7 +73,7 @@ export const TopTracksChart: React.FC<{ chartName: string }> = ({ chartName }) =
 		if (active && payload && payload.length) {
 			const trackData = payload[0].payload;
 			return (
-				<div className="bg-white dark:bg-neutral-600 p-2 rounded-xl">
+				<div className="bg-white/70 backdrop-blur dark:bg-neutral-600 p-2 rounded-xl">
 					{trackData.image && <Image src={trackData.image} alt={trackData.trackName} width={100} height={100} className="mb-2 rounded-xl" />}
 					<p className="font-bold">{trackData.trackName}</p>
 					<p>{trackData.count} plays</p>
@@ -87,7 +87,7 @@ export const TopTracksChart: React.FC<{ chartName: string }> = ({ chartName }) =
 		<Card className="w-full">
 			<CardHeader>
 				<CardTitle>{chartName}</CardTitle>
-				<CardDescription>Top 20 tracks by play count</CardDescription>
+				<CardDescription>Top 20 tracks by play count of all time</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<div className="h-[66vh]">
@@ -131,7 +131,7 @@ export const TopTracksChart: React.FC<{ chartName: string }> = ({ chartName }) =
 				</div>
 			</CardContent>
 			<CardFooter>
-				<div className="text-sm">Top 20 tracks ordered alphabetically by track name.</div>
+				<div className="text-sm">Top 20 tracks ordered by play count</div>
 			</CardFooter>
 		</Card>
 	);
