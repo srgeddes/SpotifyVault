@@ -499,12 +499,21 @@ export async function saveArtistMetadata(metadata: ArtistMetadata): Promise<void
 }
 
 export async function batchGetArtistMetadata(artistIds: string[]): Promise<ArtistMetadata[]> {
-	const keys = artistIds.map((id) => ({ artistId: id }));
-	const params = {
-		RequestItems: {
-			[ARTIST_METADATA_TABLE]: { Keys: keys },
-		},
-	};
-	const result = await ddbDocClient.send(new BatchGetCommand(params));
-	return (result.Responses?.[ARTIST_METADATA_TABLE] || []) as ArtistMetadata[];
+	const chunkSize = 100;
+	let allMetadata: ArtistMetadata[] = [];
+
+	for (let i = 0; i < artistIds.length; i += chunkSize) {
+		const chunk = artistIds.slice(i, i + chunkSize);
+		const keys = chunk.map((id) => ({ artistId: id }));
+		const params = {
+			RequestItems: {
+				[ARTIST_METADATA_TABLE]: { Keys: keys },
+			},
+		};
+		const result = await ddbDocClient.send(new BatchGetCommand(params));
+		const metadata = (result.Responses?.[ARTIST_METADATA_TABLE] || []) as ArtistMetadata[];
+		allMetadata = allMetadata.concat(metadata);
+	}
+
+	return allMetadata;
 }

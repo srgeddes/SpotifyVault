@@ -65,7 +65,6 @@ export const GenreDistributionPieChartThumbnail: React.FC<GenreDistributionPieCh
 			distribution[primaryGenre] = (distribution[primaryGenre] || 0) + 1;
 		});
 
-		// Sort by value (count) in descending order
 		const sortedDistribution = Object.entries(distribution)
 			.map(([genre, count]) => ({
 				name: genre,
@@ -73,7 +72,6 @@ export const GenreDistributionPieChartThumbnail: React.FC<GenreDistributionPieCh
 			}))
 			.sort((a, b) => b.value - a.value);
 
-		// Limit to max 20 genres
 		if (sortedDistribution.length > 20) {
 			const topGenres = sortedDistribution.slice(0, 19);
 			const otherGenres = sortedDistribution.slice(19);

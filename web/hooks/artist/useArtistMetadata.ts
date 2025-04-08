@@ -3,7 +3,14 @@
 import useSWR from "swr";
 import type { ArtistMetadata } from "@/services/dynamoService";
 
-const fetcher = (url: string): Promise<ArtistMetadata[]> => fetch(url).then((res) => res.json());
+const fetcher = async (url: string): Promise<ArtistMetadata[]> => {
+	const res = await fetch(url);
+	const data = await res.json();
+	if (!res.ok) {
+		throw new Error(data.error || "Failed to fetch artist metadata");
+	}
+	return Array.isArray(data) ? data : [data];
+};
 
 export function useArtistMetadata(artistIds: string[]) {
 	const queryString = artistIds.join(",");

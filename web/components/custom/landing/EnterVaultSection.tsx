@@ -14,6 +14,7 @@ export default function EnterVaultSection() {
 	const { theme } = useTheme();
 	const barColor = theme === "dark" ? "black" : "white";
 	const [isMobile, setIsMobile] = useState(false);
+	const [activeArtist, setActiveArtist] = useState(0); // 0 = Taylor, 1 = Kendrick, 2 = Drake
 
 	useEffect(() => {
 		const checkIfMobile = () => {
@@ -26,6 +27,14 @@ export default function EnterVaultSection() {
 		return () => {
 			window.removeEventListener("resize", checkIfMobile);
 		};
+	}, []);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setActiveArtist((prev) => (prev + 1) % 3);
+		}, 5000);
+
+		return () => clearInterval(interval);
 	}, []);
 
 	return (
@@ -87,8 +96,15 @@ export default function EnterVaultSection() {
 							height: isMobile ? "375px" : "475px",
 						}}
 						initial={{ y: 30, opacity: 0 }}
-						animate={{ y: 0, opacity: 1 }}
-						transition={{ duration: 0.8, delay: 0.4 }}
+						animate={{
+							y: activeArtist === 1 ? -15 : 0,
+							scale: activeArtist === 1 ? 1.05 : 1,
+							opacity: 1,
+						}}
+						transition={{
+							duration: activeArtist === 1 ? 0.4 : 0.8,
+							delay: activeArtist === 1 ? 0 : 0.1,
+						}}
 						whileHover={{ y: -15, scale: 1.05, transition: { duration: 0.4 } }}>
 						<Image
 							src="/images/landing/big_kendrick_lamar.png"
@@ -106,8 +122,15 @@ export default function EnterVaultSection() {
 						className="relative"
 						style={{ width: "375px", height: "475px" }}
 						initial={{ y: 30, opacity: 0 }}
-						animate={{ y: 0, opacity: 1 }}
-						transition={{ duration: 0.8, delay: 0.2 }}
+						animate={{
+							y: activeArtist === 0 ? -15 : 0,
+							scale: activeArtist === 0 ? 1.05 : 1,
+							opacity: 1,
+						}}
+						transition={{
+							duration: activeArtist === 0 ? 0.4 : 0.8,
+							delay: activeArtist === 0 ? 0 : 0.1,
+						}}
 						whileHover={{ y: -15, scale: 1.05, transition: { duration: 0.4 } }}>
 						<Image
 							src="/images/landing/big_taylor_swift.png"
@@ -125,8 +148,15 @@ export default function EnterVaultSection() {
 						className="relative"
 						style={{ width: "350px", height: "450px" }}
 						initial={{ y: 30, opacity: 0 }}
-						animate={{ y: 0, opacity: 1 }}
-						transition={{ duration: 0.8, delay: 0.6 }}
+						animate={{
+							y: activeArtist === 2 ? -15 : 0,
+							scale: activeArtist === 2 ? 1.05 : 1,
+							opacity: 1,
+						}}
+						transition={{
+							duration: activeArtist === 2 ? 0.4 : 0.8,
+							delay: activeArtist === 2 ? 0 : 0.1,
+						}}
 						whileHover={{ y: -15, scale: 1.05, transition: { duration: 0.4 } }}>
 						<Image
 							src="/images/landing/big_drake.png"

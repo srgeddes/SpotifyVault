@@ -14,6 +14,7 @@ import { SpotifyLink } from "../../SpotifyLink";
 import { useUserData } from "@/hooks/user/useUserData";
 import { CircleHelp } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
+import { NumberTicker } from "@/components/magicui/number-ticker";
 
 export default function Home() {
 	const { data: session } = useSession();
@@ -92,21 +93,30 @@ export default function Home() {
 					<CardContent>
 						<div className="flex">
 							<div className="w-1/4 rounded-lg">
-								<h3 className="text-xl font-bold mb-4">Total Listening</h3>
+								<h3 className="text-xl mb-4">Total Listening (mins)</h3>
 								{minutesError ? (
 									<p className="text-muted-foreground">Error loading minutes listened</p>
 								) : (
-									<p className="text-2xl">{minutesListened?.toPrecision(5) ?? "No minutes listened"} minutes</p>
+									<div className="flex">
+										<NumberTicker
+											value={minutesListened !== undefined ? Number(minutesListened?.toFixed(2)) : 0}
+											decimalPlaces={2}
+											className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white"
+										/>
+									</div>
 								)}
 
-								<h3 className="text-xl font-bold mt-4 mb-4">Listening Rank</h3>
+								<h3 className="text-xl mt-4 mb-4">Listening Rank</h3>
 								{percentileError ? (
 									<p className="text-muted-foreground">Error loading listening Percentile</p>
 								) : (
-									<p className="text-2xl">{percentileData?.rank}</p>
+									<NumberTicker
+										value={percentileData !== undefined ? Number(percentileData?.rank) : 0}
+										className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white"
+									/>
 								)}
 
-								<h3 className="text-xl font-bold mt-4 mb-4 flex items-center">
+								<h3 className="text-xl  mt-4 mb-4 flex items-center">
 									Underground Score
 									<TooltipProvider>
 										<Tooltip>
@@ -125,18 +135,21 @@ export default function Home() {
 								{undergroundScoreError ? (
 									<p className="text-muted-foreground">Error loading Underground Score</p>
 								) : (
-									<p className="text-2xl">{undergroundScore?.toPrecision(2) ?? "No underground score"}</p>
+									<NumberTicker
+										value={undergroundScore !== undefined ? Number(undergroundScore?.toPrecision(2)) : 0}
+										className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white"
+									/>
 								)}
 							</div>
 
 							<div className="w-1/3 rounded-lg">
-								<h3 className="text-xl font-bold mb-4">Joined</h3>
-								<p className="text-2xl">{formattedJoinedAtDate}</p>
+								<h3 className="text-xl  mb-4">Joined</h3>
+								<p className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white">{formattedJoinedAtDate}</p>
 							</div>
 
 							<div className="flex w-1/2">
 								<div className="w-1/2 rounded-lg">
-									<h3 className="text-xl font-bold mb-4">Top Artists</h3>
+									<h3 className="text-xl  mb-4">Top Artists</h3>
 									<div className="space-y-3">
 										{topArtists.map((artist) => (
 											<div key={artist.id} className="flex items-center space-x-3">
@@ -159,7 +172,7 @@ export default function Home() {
 									</div>
 								</div>
 								<div className="w-1/2 pl-4">
-									<h3 className="text-xl font-bold mb-4">Top Tracks</h3>
+									<h3 className="text-xl  mb-4">Top Tracks</h3>
 									<div className="space-y-3">
 										{topTracks.map((track: TopTrack) => (
 											<div key={track.id} className="flex items-center space-x-3">

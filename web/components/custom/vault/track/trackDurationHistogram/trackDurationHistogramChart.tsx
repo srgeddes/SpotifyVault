@@ -5,6 +5,7 @@ import { CartesianGrid, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContaine
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTheme } from "next-themes";
 import { useTrackPlays } from "@/hooks/user/track-plays";
+import { useTrackMetadata } from "@/hooks/track/useTrackMetadata";
 import Loading from "@/components/custom/loading";
 
 interface CustomTooltipProps {
@@ -78,7 +79,7 @@ export const TrackDurationHistogramChart: React.FC<{ chartName: string }> = ({ c
 	if (!trackPlays || trackPlays.length === 0) return <div>No track plays data available</div>;
 
 	const maxCount = histogramData.reduce((max, item) => Math.max(max, item.count), 0);
-	const yAxisUpperBound = maxCount + 1;
+	const yAxisUpperBound = maxCount + 10;
 
 	return (
 		<Card className="w-full">
@@ -87,7 +88,7 @@ export const TrackDurationHistogramChart: React.FC<{ chartName: string }> = ({ c
 				<CardDescription>Distribution of song durations (in minutes)</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<div className="h-120">
+				<div className="h-[66vh]">
 					<ResponsiveContainer width="100%" height="100%">
 						<BarChart data={histogramData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 							<CartesianGrid strokeDasharray="3 3" stroke={barColor} opacity={0.1} />

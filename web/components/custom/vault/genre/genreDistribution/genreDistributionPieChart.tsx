@@ -357,7 +357,7 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 			const artistId: string | undefined = topTrack?.artistId;
 			const artistImageUrl: string | null = artistId ? artistImages[artistId] : null;
 			return (
-				<div className="bg-card p-3 rounded-lg shadow-md border">
+				<div className=" backdrop-blur p-3 rounded-lg shadow-md border">
 					<p className="font-bold text-lg mb-1">{genre}</p>
 					<p className="mb-2">
 						{count} tracks ({percentage}%)
@@ -459,7 +459,7 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 					</ResponsiveContainer>
 				</div>
 			</CardContent>
-			<CardFooter className="pt-6 flex justify-between text-sm text-gray-500">
+			<CardFooter className="pt-6 flex justify-between text-sm text-gray-500 dark:text-gray-400">
 				<div>Total tracks: {totalPlays}</div>
 				<div>{genreDistribution.length >= 20 ? "Top 19 genres + Others shown" : `${genreDistribution.length} genres shown`}</div>
 			</CardFooter>
