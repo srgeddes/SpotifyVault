@@ -5,7 +5,7 @@ import Link from "next/link";
 interface SpotifyLinkProps {
 	id: string;
 	externalUrl: string;
-	type: "track" | "artist";
+	type: "track" | "artist" | "user";
 	children: React.ReactNode;
 }
 
@@ -13,9 +13,16 @@ export const SpotifyLink: React.FC<SpotifyLinkProps> = ({ id, externalUrl, type,
 	const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
 		e.preventDefault();
 		const spotifyURI = `spotify:${type}:${id}`;
-
 		window.location.href = spotifyURI;
 	};
+
+	if (type === "user") {
+		return (
+			<Link href={externalUrl} onClick={handleClick} className="cursor-pointer" target="_blank">
+				{children}
+			</Link>
+		);
+	}
 
 	return (
 		<Link href={externalUrl} onClick={handleClick} className="cursor-pointer" target="_blank">

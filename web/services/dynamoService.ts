@@ -1,5 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, QueryCommand, PutCommand, ScanCommand, GetCommand, BatchGetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { getValidAccessToken } from "@/services/spotifyService";
 
 const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(client);
@@ -63,6 +64,10 @@ export async function scanUsers(): Promise<User[]> {
 		);
 		ExclusiveStartKey = result.LastEvaluatedKey;
 	} while (ExclusiveStartKey);
+
+	for (const user of users) {
+		user.accessToken = await getValidAccessToken(user);
+	}
 
 	return users;
 }

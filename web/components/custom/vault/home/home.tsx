@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TopArtists } from "@/hooks/user/topArtists";
-import { TopTracks, TopTrack } from "@/hooks/user/topTracks";
+import { TopTracks } from "@/hooks/user/topTracks";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useMinutesListened } from "@/hooks/user/minutes-listened";
@@ -15,6 +15,8 @@ import { useUserData } from "@/hooks/user/useUserData";
 import { CircleHelp } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { NumberTicker } from "@/components/magicui/number-ticker";
+import { Leaderboard } from "./leaderboard";
+import { HyperText } from "@/components/magicui/hyper-text";
 
 export default function Home() {
 	const { data: session } = useSession();
@@ -81,10 +83,12 @@ export default function Home() {
 						</div>
 
 						<div>
-							<CardTitle className="text-3xl mb-4">
+							<CardTitle className="text-4xl mb-4">
 								<span>
 									Welcome to the Vault,&nbsp;
-									<span className="italic">{session?.user?.name}</span>
+									<span>
+										<HyperText>{session?.user?.name || ""}</HyperText>
+									</span>
 								</span>
 							</CardTitle>
 						</div>
@@ -92,64 +96,70 @@ export default function Home() {
 
 					<CardContent>
 						<div className="flex">
-							<div className="w-1/4 rounded-lg">
-								<h3 className="text-xl mb-4">Total Listening (mins)</h3>
-								{minutesError ? (
-									<p className="text-muted-foreground">Error loading minutes listened</p>
-								) : (
-									<div className="flex">
-										<NumberTicker
-											value={minutesListened !== undefined ? Number(minutesListened?.toFixed(2)) : 0}
-											decimalPlaces={2}
-											className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white"
-										/>
+							<div className="w-1/2 flex pr-2">
+								<div className="w-1/2">
+									<div className="mb-4">
+										<h3 className="text-xl mb-4">Total Listening (mins)</h3>
+										{minutesError ? (
+											<p className="text-muted-foreground">Error loading minutes listened</p>
+										) : (
+											<div className="flex">
+												<NumberTicker
+													value={minutesListened !== undefined ? Number(minutesListened?.toFixed(2)) : 0}
+													decimalPlaces={2}
+													className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white"
+												/>
+											</div>
+										)}
+
+										<h3 className="text-xl mt-4 mb-4">Listening Rank</h3>
+										{percentileError ? (
+											<p className="text-muted-foreground">Error loading listening Percentile</p>
+										) : (
+											<NumberTicker
+												value={percentileData !== undefined ? Number(percentileData?.rank) : 0}
+												className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white"
+											/>
+										)}
+
+										<h3 className="text-xl mt-4 mb-4 flex items-center">
+											Underground Score
+											<TooltipProvider>
+												<Tooltip>
+													<TooltipTrigger asChild>
+														<CircleHelp className="ml-1 h-4 w-4" />
+													</TooltipTrigger>
+													<TooltipContent className="bg-neutral-600 text-white p-2 rounded-xl shadow-md w-60">
+														<p className="text-sm">
+															Your underground score measures how unique your listening habits are (0-100). A higher score indicates that your music
+															taste is more mainstream.
+														</p>
+													</TooltipContent>
+												</Tooltip>
+											</TooltipProvider>
+										</h3>
+										{undergroundScoreError ? (
+											<p className="text-muted-foreground">Error loading Underground Score</p>
+										) : (
+											<NumberTicker
+												value={undergroundScore !== undefined ? Number(undergroundScore?.toPrecision(2)) : 0}
+												className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white"
+											/>
+										)}
+										<h3 className="text-xl mt-4">Joined</h3>
+										<p className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white">{formattedJoinedAtDate}</p>
 									</div>
-								)}
+								</div>
 
-								<h3 className="text-xl mt-4 mb-4">Listening Rank</h3>
-								{percentileError ? (
-									<p className="text-muted-foreground">Error loading listening Percentile</p>
-								) : (
-									<NumberTicker
-										value={percentileData !== undefined ? Number(percentileData?.rank) : 0}
-										className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white"
-									/>
-								)}
-
-								<h3 className="text-xl  mt-4 mb-4 flex items-center">
-									Underground Score
-									<TooltipProvider>
-										<Tooltip>
-											<TooltipTrigger asChild>
-												<CircleHelp className="ml-1 h-4 w-4" />
-											</TooltipTrigger>
-											<TooltipContent className="bg-neutral-600 text-white p-2 rounded-xl shadow-md w-60">
-												<p className="text-sm">
-													Your underground score measures how unique your listening habits are (0-100). A higher score indicates that your music taste
-													is more mainstream.
-												</p>
-											</TooltipContent>
-										</Tooltip>
-									</TooltipProvider>
-								</h3>
-								{undergroundScoreError ? (
-									<p className="text-muted-foreground">Error loading Underground Score</p>
-								) : (
-									<NumberTicker
-										value={undergroundScore !== undefined ? Number(undergroundScore?.toPrecision(2)) : 0}
-										className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white"
-									/>
-								)}
+								<div className="w-1/2">
+									<h3 className="text-xl mb-4">Leaderboard</h3>
+									<Leaderboard className="h-full max-h-[33vh]" />
+								</div>
 							</div>
 
-							<div className="w-1/3 rounded-lg">
-								<h3 className="text-xl  mb-4">Joined</h3>
-								<p className="whitespace-pre-wrap text-3xl font-medium tracking-tighter text-black dark:text-white">{formattedJoinedAtDate}</p>
-							</div>
-
-							<div className="flex w-1/2">
-								<div className="w-1/2 rounded-lg">
-									<h3 className="text-xl  mb-4">Top Artists</h3>
+							<div className="w-1/2 flex gap-4">
+								<div className="w-1/2 pr-2">
+									<h3 className="text-xl mb-4">Top Artists</h3>
 									<div className="space-y-3">
 										{topArtists.map((artist) => (
 											<div key={artist.id} className="flex items-center space-x-3">
@@ -171,10 +181,11 @@ export default function Home() {
 										))}
 									</div>
 								</div>
-								<div className="w-1/2 pl-4">
-									<h3 className="text-xl  mb-4">Top Tracks</h3>
+
+								<div className="w-1/2 pl-2">
+									<h3 className="text-xl mb-4">Top Tracks</h3>
 									<div className="space-y-3">
-										{topTracks.map((track: TopTrack) => (
+										{topTracks.map((track) => (
 											<div key={track.id} className="flex items-center space-x-3">
 												<div className="w-16 h-16 flex-shrink-0 relative rounded-lg overflow-hidden shadow-md">
 													<SpotifyLink id={track.id} externalUrl={track.external_urls.spotify} type="track">
