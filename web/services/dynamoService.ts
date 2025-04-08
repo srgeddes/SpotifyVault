@@ -49,13 +49,22 @@ export async function scanUsers(): Promise<User[]> {
 		ExpressionAttributeValues: { ":meta": "METADATA" },
 	};
 
-	const result = await ddbDocClient.send(new ScanCommand(params));
-	const items = result.Items || [];
+	let users: User[] = [];
+	let ExclusiveStartKey: any = undefined;
 
-	return items.map((item) => {
-		const id = (item.PK as string).replace("USER#", "");
-		return { ...item, id } as User;
-	});
+	do {
+		const result = await ddbDocClient.send(new ScanCommand({ ...params, ExclusiveStartKey }));
+		const items = result.Items || [];
+		users = users.concat(
+			items.map((item) => {
+				const id = (item.PK as string).replace("USER#", "");
+				return { ...item, id } as User;
+			})
+		);
+		ExclusiveStartKey = result.LastEvaluatedKey;
+	} while (ExclusiveStartKey);
+
+	return users;
 }
 
 export async function updateUserAccessToken(userId: string, accessToken: string, expiresIn: number): Promise<void> {
