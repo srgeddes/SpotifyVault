@@ -5,7 +5,6 @@ import { CartesianGrid, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContaine
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTheme } from "next-themes";
 import { useTrackPlays } from "@/hooks/user/track-plays";
-import { useTrackMetadata } from "@/hooks/track/useTrackMetadata";
 import Loading from "@/components/custom/loading";
 
 interface CustomTooltipProps {
