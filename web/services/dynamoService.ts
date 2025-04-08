@@ -1,14 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import {
-	DynamoDBDocumentClient,
-	QueryCommand,
-	PutCommand,
-	ScanCommand,
-	GetCommand,
-	BatchGetCommand,
-	UpdateCommand,
-	BatchWriteCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, QueryCommand, PutCommand, ScanCommand, GetCommand, BatchGetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({ region: process.env.AWS_REGION });
 const ddbDocClient = DynamoDBDocumentClient.from(client);
@@ -22,6 +13,8 @@ export interface User {
 	email?: string;
 	displayName?: string;
 	refreshToken?: string;
+	accessToken?: string;
+	tokenExpiresAt?: number;
 	createdAt: string;
 	updatedAt: string;
 }
@@ -63,6 +56,24 @@ export async function scanUsers(): Promise<User[]> {
 		const id = (item.PK as string).replace("USER#", "");
 		return { ...item, id } as User;
 	});
+}
+
+export async function updateUserAccessToken(userId: string, accessToken: string, expiresIn: number): Promise<void> {
+	const params = {
+		TableName: process.env.DYNAMODB_SPOTIFY_ACTIVITY_TABLE!,
+		Key: {
+			PK: `USER#${userId}`,
+			SK: "METADATA",
+		},
+		UpdateExpression: "SET accessToken = :at, tokenExpiresAt = :te, updatedAt = :ua",
+		ExpressionAttributeValues: {
+			":at": accessToken,
+			":te": Date.now() + expiresIn * 1000,
+			":ua": new Date().toISOString(),
+		},
+	};
+
+	await ddbDocClient.send(new UpdateCommand(params));
 }
 
 export async function getUserById(userId: string): Promise<User | null> {

@@ -13,11 +13,12 @@ import {
 	updateTrackMetadata,
 } from "@/services/dynamoService";
 
+import { updateUserAccessToken } from "@/services/dynamoService";
+
 export async function refreshAccessTokenForUser(user: any): Promise<string> {
 	if (!user.refreshToken) {
 		throw new Error(`No refresh token found for user ${user.id}`);
 	}
-
 	const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID!;
 	const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET!;
 
@@ -30,9 +31,7 @@ export async function refreshAccessTokenForUser(user: any): Promise<string> {
 
 	const response = await fetch("https://accounts.spotify.com/api/token", {
 		method: "POST",
-		headers: {
-			"Content-Type": "application/x-www-form-urlencoded",
-		},
+		headers: { "Content-Type": "application/x-www-form-urlencoded" },
 		body: params.toString(),
 	});
 
@@ -40,11 +39,26 @@ export async function refreshAccessTokenForUser(user: any): Promise<string> {
 	if (!response.ok) {
 		throw new Error(`Failed to refresh token for user ${user.id}: ${data.error}`);
 	}
+
+	if (data.access_token && data.expires_in) {
+		await updateUserAccessToken(user.id, data.access_token, data.expires_in);
+	}
+
 	return data.access_token;
 }
 
+export async function getValidAccessToken(user: any): Promise<string> {
+	const currentTime = Date.now();
+	if (user.accessToken && user.tokenExpiresAt && currentTime < user.tokenExpiresAt) {
+		return user.accessToken;
+	}
+	const newAccessToken = await refreshAccessTokenForUser(user);
+	return newAccessToken;
+}
+
 export async function updatePlayedTracks(user: any): Promise<void> {
-	const accessToken = await refreshAccessTokenForUser(user);
+	const accessToken = await getValidAccessToken(user);
+
 	const spotifyUrl = "https://api.spotify.com/v1/me/player/recently-played?limit=50";
 	const res = await fetch(spotifyUrl, {
 		headers: { Authorization: `Bearer ${accessToken}` },
@@ -88,8 +102,9 @@ export async function updatePlayedTracks(user: any): Promise<void> {
 }
 
 export async function updateSavedTracks(user: any): Promise<void> {
-	const accessToken = await refreshAccessTokenForUser(user);
+	const accessToken = await getValidAccessToken(user);
 	const spotifyUrl = "https://api.spotify.com/v1/me/tracks?";
+
 	const res = await fetch(spotifyUrl, {
 		headers: { Authorization: `Bearer ${accessToken}` },
 	});
@@ -126,6 +141,7 @@ export async function updateSavedTracks(user: any): Promise<void> {
 export async function updateArtistFollows(user: any): Promise<void> {
 	const access_token = await refreshAccessTokenForUser(user);
 	const spotifyUrl = "https://api.spotify.com/v1/me/following?type=artist&limit=50";
+
 	const res = await fetch(spotifyUrl, {
 		headers: { Authorization: `Bearer ${access_token}` },
 	});
@@ -160,9 +176,9 @@ export async function updateArtistFollows(user: any): Promise<void> {
 }
 
 export async function updatePlaylistPlays(user: any): Promise<void> {
-	const accessToken = await refreshAccessTokenForUser(user);
-
+	const accessToken = await getValidAccessToken(user);
 	const spotifyUrl = "https://api.spotify.com/v1/me/player/recently-played?limit=50";
+
 	const res = await fetch(spotifyUrl, {
 		headers: { Authorization: `Bearer ${accessToken}` },
 	});
@@ -205,9 +221,9 @@ export async function updatePlaylistPlays(user: any): Promise<void> {
 import { savePlaylist } from "@/services/dynamoService";
 
 export async function updatePlaylists(user: any): Promise<void> {
-	const accessToken = await refreshAccessTokenForUser(user);
-
+	const accessToken = await getValidAccessToken(user);
 	const spotifyUrl = "https://api.spotify.com/v1/me/playlists?limit=50";
+
 	const res = await fetch(spotifyUrl, {
 		headers: { Authorization: `Bearer ${accessToken}` },
 	});
