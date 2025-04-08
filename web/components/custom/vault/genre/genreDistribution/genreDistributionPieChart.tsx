@@ -259,7 +259,6 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 				}
 			});
 
-			// Find the most played track in the "Other" category
 			if (otherGenreTracks.length > 0) {
 				otherGenreTracks.sort((a: TrackCount, b: TrackCount): number => b.count - a.count);
 				topTrackByGenre["Other"] = otherGenreTracks[0];
@@ -284,7 +283,6 @@ const GenreDistributionPieChart: React.FC<{ chartName: string }> = ({ chartName 
 		const distribution: Record<string, number> = {};
 		if (!trackPlays) return [];
 
-		// Count plays by genre
 		trackPlays.forEach((play: TrackPlay): void => {
 			if (!play.artistIds) return;
 			const firstArtistId: string = play.artistIds.split(",")[0].trim();

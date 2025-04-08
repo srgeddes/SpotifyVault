@@ -5,6 +5,12 @@ require("dotenv").config({ path: "../.env" });
 const nextConfig: NextConfig = {
 	images: {
 		domains: ["i.scdn.co"],
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "**",
+			},
+		],
 	},
 
 	env: {

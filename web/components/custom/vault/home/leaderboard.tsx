@@ -43,7 +43,7 @@ export function Leaderboard({ className }: { className?: string }) {
 											<div className="relative">
 												<div
 													className={cn(
-														"absolute -left-1 -top-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium",
+														"absolute -left-1 -top-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium z-10", // Added z-10 here
 														rank === 1
 															? "bg-yellow-400 text-black"
 															: rank === 2
@@ -54,10 +54,13 @@ export function Leaderboard({ className }: { className?: string }) {
 													)}>
 													{rank}
 												</div>
+
 												{user.profileImage ? (
-													<Image src={user.profileImage} alt={user.displayName || "User"} className="w-12 h-12 rounded-full object-cover" />
+													<div className="w-14 h-14 relative rounded-full overflow-hidden">
+														<Image src={user.profileImage} alt="Artist" layout="fill" objectFit="cover" />
+													</div>
 												) : (
-													<div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+													<div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
 														<User className="w-6 h-6 text-gray-400" />
 													</div>
 												)}
