@@ -25,7 +25,7 @@ interface HyperTextProps extends MotionProps {
 	characterSet?: CharacterSet;
 }
 
-const DEFAULT_CHARACTER_SET = Object.freeze("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")) as readonly string[];
+const DEFAULT_CHARACTER_SET = Object.freeze("ABCDEFGHIJKLMNOPQRSTUVWXYZ".toLowerCase().split("")) as readonly string[];
 
 const getRandomInt = (max: number): number => Math.floor(Math.random() * max);
 
