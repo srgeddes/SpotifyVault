@@ -29,12 +29,12 @@ export default function Footer() {
 							</Link>
 						</motion.div>
 						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
-							<Link href="/about" className="text-black dark:text-white">
+							<Link href="https://rileygeddes.com" className="text-black dark:text-white">
 								About
 							</Link>
 						</motion.div>
 						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
-							<Link href="/services" className="text-black dark:text-white">
+							<Link href="mailto:rileygeddes@virginia.edu" className="text-black dark:text-white">
 								Contact
 							</Link>
 						</motion.div>
@@ -88,12 +88,12 @@ export default function Footer() {
 							</Link>
 						</motion.div>
 						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
-							<Link href="/about" className="text-black dark:text-white">
+							<Link href="https://rileygeddes.com" className="text-black dark:text-white">
 								About
 							</Link>
 						</motion.div>
 						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
-							<Link href="/services" className="text-black dark:text-white">
+							<Link href="mailto:rileygeddes@virginia.edu" className="text-black dark:text-white">
 								Contact
 							</Link>
 						</motion.div>

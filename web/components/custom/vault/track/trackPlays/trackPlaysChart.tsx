@@ -18,7 +18,7 @@ interface CustomTooltipProps {
 	payload?: { name: string; value: number }[];
 	label?: string;
 	aggregation: string;
-	dataType: "plays" | "minutes";
+	dataType: "plays" | "minutes" | "hours";
 }
 
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, aggregation, dataType }) => {
@@ -42,9 +42,11 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, a
 				</p>{" "}
 				<div className="flex items-center gap-3 mt-2">
 					<div>
-						<p className="font-medium">{dataType === "plays" ? "Tracks Played" : "Minutes Played"}</p>
+						<p className="font-medium"> {dataType === "plays" ? "Tracks Played" : dataType === "minutes" ? "Minutes Played" : "Hours Listened"}</p>
 						<p className="text-sm">
-							<span className="font-semibold">{dataType === "minutes" ? Number(payload[0].value).toFixed(2) : payload[0].value}</span>{" "}
+							<span className="font-semibold">
+								{dataType === "minutes" || dataType === "hours" ? Number(payload[0].value).toFixed(2) : payload[0].value}
+							</span>
 						</p>
 					</div>
 				</div>
@@ -69,7 +71,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 	const [dateRange, setDateRange] = useState<{ from: Date | null; to: Date | null }>({ from: null, to: null });
 	const [aggregation, setAggregation] = useState("day");
 	const [lineColor, setLineColor] = useState(resolvedTheme === "dark" ? "#ffffff" : "#000000");
-	const [dataType, setDataType] = useState<"plays" | "minutes">("plays");
+	const [dataType, setDataType] = useState<"plays" | "minutes" | "hours">("plays");
 
 	useEffect(() => {
 		setLineColor(resolvedTheme === "dark" ? "#ffffff" : "#000000");
@@ -100,9 +102,12 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 
 			if (dataType === "plays") {
 				acc[dateKey] = (acc[dateKey] || 0) + 1;
-			} else {
+			} else if (dataType === "minutes") {
 				const minutesPlayed = play.durationMs ? play.durationMs / 60000 : 0;
 				acc[dateKey] = (acc[dateKey] || 0) + minutesPlayed;
+			} else if (dataType === "hours") {
+				const hoursPlayed = play.durationMs ? play.durationMs / 3600000 : 0;
+				acc[dateKey] = (acc[dateKey] || 0) + hoursPlayed;
 			}
 			return acc;
 		}, {});
@@ -174,13 +179,14 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 					</SelectContent>
 				</Select>
 
-				<Select value={dataType} onValueChange={(value) => setDataType(value as "plays" | "minutes")}>
+				<Select value={dataType} onValueChange={(value) => setDataType(value as "plays" | "minutes" | "hours")}>
 					<SelectTrigger className="w-[100px] border rounded p-1 text-sm cursor-pointer text-center">
 						<SelectValue placeholder="Data Type" />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem value="plays">Plays</SelectItem>
 						<SelectItem value="minutes">Minutes</SelectItem>
+						<SelectItem value="hours">Hours</SelectItem>
 					</SelectContent>
 				</Select>
 
@@ -279,7 +285,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 								domain={[0, yAxisUpperBound]}
 								ticks={ticks}
 								label={{
-									value: dataType === "plays" ? "Tracks Played" : "Minutes Listened",
+									value: dataType === "plays" ? "Tracks Played" : dataType === "minutes" ? "Minutes Listened" : "Hours Listened",
 									angle: -90,
 									position: "insideLeft",
 									offset: -5,
@@ -311,7 +317,8 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 
 			<CardFooter>
 				<div className="text-sm">
-					Average of {averageValue} {dataType === "plays" ? "tracks" : "minutes"} per{" "}
+					Average of {averageValue} {dataType === "plays" ? "tracks" : dataType === "minutes" ? "minutes" : "hours"} per{" "}
+					{aggregation === "day" ? "day" : aggregation === "week" ? "week" : aggregation === "month" ? "month" : "year"}
 					{aggregation === "day" ? "day" : aggregation === "week" ? "week" : aggregation === "month" ? "month" : "year"}
 				</div>
 			</CardFooter>
