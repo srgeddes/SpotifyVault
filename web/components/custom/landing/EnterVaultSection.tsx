@@ -14,7 +14,7 @@ export default function EnterVaultSection() {
 	const { theme } = useTheme();
 	const barColor = theme === "dark" ? "black" : "white";
 	const [isMobile, setIsMobile] = useState(false);
-	const [activeArtist, setActiveArtist] = useState(0); // 0 = Taylor, 1 = Kendrick, 2 = Drake
+	const [activeArtist, setActiveArtist] = useState(0);
 
 	useEffect(() => {
 		const checkIfMobile = () => {
