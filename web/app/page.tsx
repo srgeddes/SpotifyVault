@@ -1,9 +1,10 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import EnterVaultSection from "@/components/custom/landing/EnterVaultSection";
-import DiveDNASection from "@/components/custom/landing/DiveDNASection";
 import { authOptions } from "@/lib/authOptions";
-import { FAQSection } from "@/components/custom/landing/FAQSection";
+import OneVibeSection from "@/components/custom/landing/one-vibe-section";
+import YourPeopleSection from "@/components/custom/landing/your-people-section";
+import LearnYourListeningHabitsSection from "@/components/custom/landing/learn-your-listening-habits-section";
+import DiveDNASection from "@/components/custom/landing/dive-dna-section";
 
 export default async function Home() {
 	const session = await getServerSession(authOptions);
@@ -13,10 +14,11 @@ export default async function Home() {
 	}
 
 	return (
-		<div className="flex flex-col items-center w-full min-h-screen space-y-20 md:space-y-15 pt-40">
-			<EnterVaultSection />
+		<div className="flex flex-col w-full min-h-screen">
+			<OneVibeSection />
+			<YourPeopleSection />
+			<LearnYourListeningHabitsSection />
 			<DiveDNASection />
-			<FAQSection />
 		</div>
 	);
 }

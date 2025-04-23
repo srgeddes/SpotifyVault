@@ -75,9 +75,9 @@ export function VaultSideBar() {
 	return (
 		<>
 			<Sidebar>
-				<div className="flex items-center p-4 border-b">
+				<div className="flex items-end p-4 border-b">
 					<Logo />
-					<span className="text-lg font-bold ml-2">SpotifyVault</span>
+					<span className="text-lg font-bold ml-2">sonalli</span>
 				</div>
 				<SidebarContent>
 					<SidebarGroup>

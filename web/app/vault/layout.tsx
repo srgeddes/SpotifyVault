@@ -7,7 +7,7 @@ export default function VaultLayout({ children }: { children: React.ReactNode })
 	return (
 		<Provider>
 			<SidebarProvider>
-				<div className="flex flex-col flex-grow">
+				<div className="flex flex-col flex-grow dark:bg-black">
 					<div className="flex flex-row flex-grow">
 						<VaultSideBar />
 						<SidebarTrigger className="mt-6 ml-2" />

@@ -83,13 +83,9 @@ export default function Home() {
 						</div>
 
 						<div>
-							<CardTitle className="text-4xl mb-4">
-								<span>
-									Welcome to the Vault,&nbsp;
-									<span>
-										<HyperText>{session?.user?.name || ""}</HyperText>
-									</span>
-								</span>
+							<CardTitle className="text-4xl mb-4 inline-flex items-center space-x-2">
+								<span>Welcome,</span>
+								<HyperText>{session?.user?.name || ""}</HyperText>
 							</CardTitle>
 						</div>
 					</CardHeader>

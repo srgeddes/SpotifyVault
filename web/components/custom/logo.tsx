@@ -7,9 +7,10 @@ import React, { useState, useEffect } from "react";
 type LogoProps = {
 	width?: number;
 	height?: number;
+	theme?: "light" | "dark";
 };
 
-export default function Logo({ width = 40, height = 40 }: LogoProps) {
+export default function Logo({ width = 40, height = 40, theme }: LogoProps) {
 	const { resolvedTheme } = useTheme();
 	const [mounted, setMounted] = useState(false);
 
@@ -21,7 +22,8 @@ export default function Logo({ width = 40, height = 40 }: LogoProps) {
 		return null;
 	}
 
-	const logoSrc = resolvedTheme === "dark" ? "/images/dark_logo.png" : "/images/logo.png";
+	const effectiveTheme = theme ?? resolvedTheme;
+	const logoSrc = effectiveTheme === "dark" ? "/images/logo_dark.png" : "/images/logo.png";
 
 	return (
 		<div className="flex items-center justify-center">
