@@ -37,7 +37,9 @@ export default function OneVibeSection() {
 						background="var(--prussian-blue)">
 						<span>Get Started</span>
 					</ShimmerButton>
-					<Button className="btn btn-xl px-8 py-6 border bg-white border-black text-black rounded-lg hover:bg-gray-50 transition-colors">
+					<Button
+						onClick={() => signIn("demo", { callbackUrl: "/vault" })}
+						className="btn btn-xl px-8 py-6 border bg-white border-black text-black rounded-lg hover:bg-gray-50 transition-colors">
 						Try Demo
 					</Button>
 				</motion.div>

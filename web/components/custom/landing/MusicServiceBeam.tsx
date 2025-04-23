@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Logo from "../logo";
 import { AnimatedBeam } from "@/components/magicui/animated-beam";
+import Link from "next/link";
 
 const Circle = forwardRef<HTMLDivElement, { className?: string; children?: React.ReactNode }>(({ className, children }, ref) => (
 	<div
@@ -31,10 +32,9 @@ export function MusicServiceBeam({ className }: { className?: string }) {
 			<div className="flex size-full max-w-xl flex-row items-stretch justify-between gap-16">
 				<div className="flex flex-col justify-center gap-4">
 					<Circle ref={div1Ref}>
-						<Image src="svgs/spotify.svg" width={32} height={32} alt="Spotify" />
-					</Circle>
-					<Circle ref={div2Ref}>
-						<Image src="svgs/apple-music.svg" width={32} height={32} alt="Apple Music" />
+						<Link href="https://www.spotify.com" target="_blank" rel="noopener noreferrer">
+							<Image src="svgs/spotify.svg" width={32} height={32} alt="Spotify" />
+						</Link>
 					</Circle>
 				</div>
 
