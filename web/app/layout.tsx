@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 	title: "sonalli",
 	description: "Catch the vibe of your people. Real-time listening, shared effortlessly.",
 	icons: {
-		icon: "images/logo.png",
+		icon: "/images/logo.png",
 	},
 };
 
@@ -19,7 +19,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${inter.className} antialiased bg-background-custom min-h-screen flex flex-col dark:bg-black`}>
-				{" "}
 				<Providers>
 					<NavBar />
 					<div className="flex flex-col flex-grow pb-20 dark:bg-black">{children}</div>
