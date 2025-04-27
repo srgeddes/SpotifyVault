@@ -25,7 +25,11 @@ export function MusicServiceBeam({ className }: { className?: string }) {
 	const div1Ref = useRef<HTMLDivElement>(null);
 	const div2Ref = useRef<HTMLDivElement>(null);
 	const div3Ref = useRef<HTMLDivElement>(null);
-	const div4Ref = useRef<HTMLDivElement>(null);
+	const userRef1 = useRef<HTMLDivElement>(null);
+	const userRef2 = useRef<HTMLDivElement>(null);
+	const userRef3 = useRef<HTMLDivElement>(null);
+	const userRef4 = useRef<HTMLDivElement>(null);
+	const userRef5 = useRef<HTMLDivElement>(null);
 
 	return (
 		<div ref={containerRef} className={cn("relative flex h-[600px] w-full items-center justify-center overflow-hidden p-16", className)}>
@@ -44,16 +48,32 @@ export function MusicServiceBeam({ className }: { className?: string }) {
 					</Circle>
 				</div>
 
-				<div className="flex flex-col justify-center gap-4">
-					<Circle ref={div4Ref}>
+				<div className="flex flex-col justify-between py-8">
+					<Circle ref={userRef1}>
+						<icons.user />
+					</Circle>
+					<Circle ref={userRef2}>
+						<icons.user />
+					</Circle>
+					<Circle ref={userRef3}>
+						<icons.user />
+					</Circle>
+					<Circle ref={userRef4}>
+						<icons.user />
+					</Circle>
+					<Circle ref={userRef5}>
 						<icons.user />
 					</Circle>
 				</div>
 			</div>
 
-			<AnimatedBeam containerRef={containerRef} fromRef={div1Ref} toRef={div3Ref} />
-			<AnimatedBeam containerRef={containerRef} fromRef={div2Ref} toRef={div3Ref} />
-			<AnimatedBeam containerRef={containerRef} fromRef={div3Ref} toRef={div4Ref} />
+			<AnimatedBeam containerRef={containerRef} fromRef={div1Ref} toRef={div3Ref} duration={3} />
+			<AnimatedBeam containerRef={containerRef} fromRef={div2Ref} toRef={div3Ref} duration={3} />
+			<AnimatedBeam containerRef={containerRef} fromRef={div3Ref} toRef={userRef1} duration={3} />
+			<AnimatedBeam containerRef={containerRef} fromRef={div3Ref} toRef={userRef2} duration={3} />
+			<AnimatedBeam containerRef={containerRef} fromRef={div3Ref} toRef={userRef3} duration={3} />
+			<AnimatedBeam containerRef={containerRef} fromRef={div3Ref} toRef={userRef4} duration={3} />
+			<AnimatedBeam containerRef={containerRef} fromRef={div3Ref} toRef={userRef5} duration={3} />
 		</div>
 	);
 }
