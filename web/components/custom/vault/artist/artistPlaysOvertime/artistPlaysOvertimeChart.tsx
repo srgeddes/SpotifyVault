@@ -14,7 +14,7 @@ import Loading from "@/components/custom/loading";
 import { useArtistMetadata } from "@/hooks/artist/useArtistMetadata";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
-import ArtistSearchCommand from "./artistPlaysSearch";
+import ArtistSearch from "./artistSearch";
 
 interface CustomTooltipProps {
 	active?: boolean;
@@ -205,12 +205,12 @@ export const ArtistPlaysOvertimeChart: React.FC<{ chartName: string }> = ({ char
 
 	return (
 		<Card className="w-full relative">
-			<ArtistSearchCommand onArtistSelect={setSelectedArtistId} />
+			<ArtistSearch onArtistSelect={setSelectedArtistId} />
 
 			<div className="absolute top-2 right-2 z-10 flex items-center gap-2">
 				<button
 					onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
-					className="flex items-center gap-2 bg-background border rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent/50 transition-colors">
+					className="flex items-center gap-2 bg-neutral-100 dark:bg-background border rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent/50 transition-colors">
 					<span>Search Artist...</span>
 					<kbd className="flex h-5 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-xs">⌘ K</kbd>
 				</button>

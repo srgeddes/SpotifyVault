@@ -306,7 +306,7 @@ async function getOrCacheArtistMetadata(artist: any, accessToken: string): Promi
 		genres: artistData.genres,
 		popularity: artistData.popularity,
 		followers: artistData.followers?.total,
-		imageUrl: artistData.images?.[0]?.url,
+		imageUrl: artistData.images?.[0]?.url || "",
 		updatedAt: new Date().toISOString(),
 	};
 
