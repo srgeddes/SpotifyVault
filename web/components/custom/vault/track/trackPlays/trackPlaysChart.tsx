@@ -27,11 +27,15 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, a
 			<div className="bg-background/50 backdrop-blur-md p-4 rounded-md shadow-lg border border-border ml-2">
 				<p className="font-bold">
 					{(() => {
+						if (!label) return "No Date";
+
 						if (aggregation === "day") {
-							const d = new Date(label + "T00:00:00");
+							const parts = label.split("-");
+							const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
 							return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 						} else if (aggregation === "month") {
-							const d = new Date(label + "-01T00:00:00");
+							const parts = label.split("-");
+							const d = new Date(Number(parts[0]), Number(parts[1]) - 1, 1);
 							return format(d, "MMM yyyy");
 						} else if (aggregation === "year") {
 							return label;
@@ -39,7 +43,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, a
 							return label;
 						}
 					})()}
-				</p>{" "}
+				</p>
 				<div className="flex items-center gap-3 mt-2">
 					<div>
 						<p className="font-medium"> {dataType === "plays" ? "Tracks Played" : dataType === "minutes" ? "Minutes Played" : "Hours Listened"}</p>
@@ -83,21 +87,21 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 			const dateObj = new Date(play.playedAt);
 
 			if (timePeriod === "dates" && dateRange.from && dateRange.to) {
-				const playDate = dateObj.toISOString().slice(0, 10);
-				const fromDate = dateRange.from.toISOString().slice(0, 10);
-				const toDate = dateRange.to.toISOString().slice(0, 10);
+				const playDate = dateObj.toLocaleDateString("en-CA");
+				const fromDate = dateRange.from.toLocaleDateString("en-CA");
+				const toDate = dateRange.to.toLocaleDateString("en-CA");
 				if (playDate < fromDate || playDate > toDate) return acc;
 			}
 
 			let dateKey = "";
 			if (aggregation === "day") {
-				dateKey = dateObj.toISOString().slice(0, 10);
+				dateKey = dateObj.toLocaleDateString("en-CA");
 			} else if (aggregation === "week") {
 				dateKey = `Week ${getWeekNumber(dateObj)} ${dateObj.getFullYear()}`;
 			} else if (aggregation === "month") {
-				dateKey = format(dateObj, "yyyy-MM");
+				dateKey = dateObj.getFullYear() + "-" + String(dateObj.getMonth() + 1).padStart(2, "0");
 			} else if (aggregation === "year") {
-				dateKey = format(dateObj, "yyyy");
+				dateKey = String(dateObj.getFullYear());
 			}
 
 			if (dataType === "plays") {
@@ -132,7 +136,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 
 	const tickStep = 5;
 	const ticks = [];
-	for (let i = 0; i <= yAxisUpperBound; i += tickStep) {
+	for (let i = 0; i < yAxisUpperBound; i += tickStep) {
 		ticks.push(i);
 	}
 
@@ -265,12 +269,14 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 								interval={tickInterval}
 								tickFormatter={(value) => {
 									if (aggregation === "day") {
-										const d = new Date(value + "T00:00:00");
+										const parts = value.split("-");
+										const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
 										return format(d, "MMM d");
 									} else if (aggregation === "week") {
 										return value;
 									} else if (aggregation === "month") {
-										const d = new Date(value + "-01T00:00:00");
+										const parts = value.split("-");
+										const d = new Date(Number(parts[0]), Number(parts[1]) - 1, 1);
 										return format(d, "MMM yyyy");
 									} else if (aggregation === "year") {
 										return value;
@@ -319,7 +325,6 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 			<CardFooter>
 				<div className="text-sm">
 					Average of {averageValue} {dataType === "plays" ? "tracks" : dataType === "minutes" ? "minutes" : "hours"} per{" "}
-					{aggregation === "day" ? "day" : aggregation === "week" ? "week" : aggregation === "month" ? "month" : "year"}
 					{aggregation === "day" ? "day" : aggregation === "week" ? "week" : aggregation === "month" ? "month" : "year"}
 				</div>
 			</CardFooter>

@@ -81,7 +81,7 @@ export function VaultSideBar() {
 				</div>
 				<SidebarContent>
 					<SidebarGroup>
-						<SidebarGroupLabel>Application</SidebarGroupLabel>
+						<SidebarGroupLabel>Charts</SidebarGroupLabel>
 						<SidebarGroupContent>
 							<SidebarMenu>
 								{items.map((item) => (
