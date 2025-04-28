@@ -19,7 +19,7 @@ export default function Footer() {
 			<div className="max-w-2xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
 				<div className="md:hidden flex flex-col space-y-6">
 					<div className="flex justify-end">
-						<Link href="/">
+						<Link href="/" className="flex items-end">
 							<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer flex items-center">
 								<Logo />
 								<span className="text-xl font-bold text-black dark:text-white ml-2">sonalli</span>
