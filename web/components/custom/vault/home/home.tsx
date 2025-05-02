@@ -69,13 +69,13 @@ export default function Home() {
 									</SelectTrigger>
 									<SelectContent>
 										<SelectItem className="cursor-pointer" value="long_term">
-											All Time
+											1 Year
 										</SelectItem>
 										<SelectItem className="cursor-pointer" value="medium_term">
-											Medium Term
+											6 Months
 										</SelectItem>
 										<SelectItem className="cursor-pointer" value="short_term">
-											Short Term
+											1 Month
 										</SelectItem>
 									</SelectContent>
 								</Select>
