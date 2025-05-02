@@ -7,11 +7,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, SquareX } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTrackPlays } from "@/hooks/user/track-plays";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Loading from "@/components/custom/loading";
+import TrackSearch from "./trackSearch";
+import { useTrackMetadata } from "@/hooks/track/useTrackMetadata";
+import Image from "next/image";
 
 interface CustomTooltipProps {
 	active?: boolean;
@@ -19,12 +22,24 @@ interface CustomTooltipProps {
 	label?: string;
 	aggregation: string;
 	dataType: "plays" | "minutes" | "hours";
+	imageUrl?: string;
+	trackName?: string;
+	artistName?: string;
 }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, aggregation, dataType }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, aggregation, dataType, imageUrl, trackName, artistName }) => {
 	if (active && payload && payload.length) {
 		return (
 			<div className="bg-background/50 backdrop-blur-md p-4 rounded-md shadow-lg border border-border ml-2">
+				{imageUrl && (
+					<div className="mb-2">
+						<Image src={imageUrl} alt="Selected track" width={100} height={100} className="rounded-md" />
+					</div>
+				)}
+
+				{trackName && <p className="font-medium">{trackName}</p>}
+				{artistName && <p className="text-sm mb-1">{artistName}</p>}
+
 				<p className="font-bold">
 					{(() => {
 						if (!label) return "No Date";
@@ -76,6 +91,9 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 	const [aggregation, setAggregation] = useState("day");
 	const [lineColor, setLineColor] = useState(resolvedTheme === "dark" ? "#ffffff" : "#000000");
 	const [dataType, setDataType] = useState<"plays" | "minutes" | "hours">("plays");
+	const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null);
+	const { metadata: selectedTrackMetadata } = useTrackMetadata(selectedTrackId ? [selectedTrackId] : []);
+	const selectedTrackName = selectedTrackMetadata?.[0]?.name;
 
 	useEffect(() => {
 		setLineColor(resolvedTheme === "dark" ? "#ffffff" : "#000000");
@@ -83,7 +101,9 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 
 	const groupedData = useMemo(() => {
 		if (!trackPlays) return {};
-		return trackPlays.reduce((acc: Record<string, number>, play) => {
+
+		const sourcePlays = selectedTrackId ? trackPlays.filter((p) => p.trackId === selectedTrackId) : trackPlays;
+		return sourcePlays.reduce<Record<string, number>>((acc, play) => {
 			const dateObj = new Date(play.playedAt);
 
 			if (timePeriod === "dates" && dateRange.from && dateRange.to) {
@@ -115,7 +135,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 			}
 			return acc;
 		}, {});
-	}, [trackPlays, timePeriod, dateRange, aggregation, dataType]);
+	}, [trackPlays, timePeriod, dateRange, aggregation, dataType, selectedTrackId]);
 
 	const chartData = useMemo(() => {
 		return Object.entries(groupedData)
@@ -142,7 +162,21 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 
 	return (
 		<Card className="w-full relative">
+			<TrackSearch onTrackSelect={setSelectedTrackId} />
+
 			<div className="absolute top-2 right-2 z-10 flex items-center gap-2">
+				{selectedTrackId && (
+					<Button variant="secondary" onClick={() => setSelectedTrackId(null)}>
+						Show all tracks <SquareX />
+					</Button>
+				)}
+
+				<button
+					onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
+					className="flex items-center gap-2 bg-neutral-100 dark:bg-background border rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent/50 transition-colors">
+					<span>Search Tracks...</span>
+					<kbd className="flex h-5 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-xs">⌘ K</kbd>
+				</button>
 				<Select
 					value={timePeriod}
 					onValueChange={(value) => {
@@ -249,7 +283,7 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 			</div>
 
 			<CardHeader>
-				<CardTitle>{chartName}</CardTitle>
+				<CardTitle>{selectedTrackName ? `${chartName} — ${selectedTrackName}` : chartName}</CardTitle>{" "}
 				<CardDescription>Number of tracks played or minutes listened over time</CardDescription>
 			</CardHeader>
 
@@ -300,7 +334,17 @@ export const TrackPlaysChart: React.FC<{ chartName: string }> = ({ chartName }) 
 									style: { fill: lineColor },
 								}}
 							/>
-							<Tooltip content={<CustomTooltip aggregation={aggregation} dataType={dataType} />} />{" "}
+							<Tooltip
+								content={
+									<CustomTooltip
+										aggregation={aggregation}
+										dataType={dataType}
+										imageUrl={selectedTrackMetadata?.[0]?.albumImageUrl}
+										trackName={selectedTrackMetadata?.[0]?.name}
+										artistName={selectedTrackMetadata?.[0]?.artists?.[0]?.name}
+									/>
+								}
+							/>{" "}
 							<Legend
 								wrapperStyle={{
 									paddingTop: 40,

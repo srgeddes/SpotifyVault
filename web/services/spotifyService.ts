@@ -71,8 +71,10 @@ export async function updatePlayedTracks(user: any): Promise<void> {
 	const data = await res.json();
 
 	if (data.items) {
+		console.log("USER", user.displayName);
 		for (const item of data.items) {
 			const track = item.track;
+
 			if (!track?.id) continue;
 			const trackPlayRecord = {
 				id: crypto.randomUUID(),
