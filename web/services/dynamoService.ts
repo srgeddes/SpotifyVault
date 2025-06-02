@@ -66,7 +66,7 @@ export async function scanUsers(): Promise<User[]> {
 	} while (ExclusiveStartKey);
 
 	for (const user of users) {
-		user.accessToken = await getValidAccessToken(user);
+		user.accessToken = (await getValidAccessToken(user)) ?? undefined;
 	}
 
 	return users;

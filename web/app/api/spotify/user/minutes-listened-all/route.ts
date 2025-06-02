@@ -38,7 +38,7 @@ export async function GET(request: Request) {
 			})
 		);
 
-		const validUsers = usersWithMinutes.filter(Boolean); // filter out nulls
+		const validUsers = usersWithMinutes.filter((user): user is NonNullable<typeof user> => Boolean(user)); // filter out nulls
 
 		validUsers.sort((a, b) => b.minutesListened - a.minutesListened);
 
