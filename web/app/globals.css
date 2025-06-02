@@ -5,6 +5,8 @@
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:where(.dark, .dark *));
+@tailwind utilities;
+
 
 @theme inline {
   --color-background: var(--background);

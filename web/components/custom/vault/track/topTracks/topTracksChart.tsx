@@ -27,7 +27,7 @@ export const TopTracksChart: React.FC<{ chartName: string }> = ({ chartName }) =
 		});
 		return Object.values(counts)
 			.sort((a, b) => b.count - a.count)
-			.slice(0, 20);
+			.slice(0, 50);
 	}, [trackPlays]);
 
 	const trackIds = useMemo(() => groupedData.map((t) => t.trackId), [groupedData]);
@@ -87,7 +87,7 @@ export const TopTracksChart: React.FC<{ chartName: string }> = ({ chartName }) =
 		<Card className="w-full">
 			<CardHeader>
 				<CardTitle>{chartName}</CardTitle>
-				<CardDescription>Top 20 tracks by play count of all time</CardDescription>
+				<CardDescription>Top 100 tracks by play count of all time</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<div className="h-[66vh]">
@@ -131,7 +131,7 @@ export const TopTracksChart: React.FC<{ chartName: string }> = ({ chartName }) =
 				</div>
 			</CardContent>
 			<CardFooter>
-				<div className="text-sm">Top 20 tracks ordered by play count</div>
+				<div className="text-sm">Top 100 tracks ordered by play count</div>
 			</CardFooter>
 		</Card>
 	);

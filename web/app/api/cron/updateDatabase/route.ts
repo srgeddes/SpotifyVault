@@ -4,6 +4,7 @@ import { updateUserSpotifyData } from "@/services/spotifyService";
 
 export async function GET() {
 	try {
+		console.log("Starting database update...");
 		const allUsers = await scanUsers();
 		for (const user of allUsers) {
 			try {

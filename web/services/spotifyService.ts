@@ -47,18 +47,28 @@ export async function refreshAccessTokenForUser(user: any): Promise<string> {
 	return data.access_token;
 }
 
-export async function getValidAccessToken(user: any): Promise<string> {
+export async function getValidAccessToken(user: any): Promise<string | null> {
 	const currentTime = Date.now();
 	if (user.accessToken && user.tokenExpiresAt && currentTime < user.tokenExpiresAt) {
 		return user.accessToken;
 	}
-	const newAccessToken = await refreshAccessTokenForUser(user);
-	return newAccessToken;
+	try {
+		const newAccessToken = await refreshAccessTokenForUser(user);
+		return newAccessToken;
+	} catch (err) {
+		console.error(`Failed to get valid access token for user ${user.id}:`, err);
+		return null;
+	}
 }
 
 export async function updatePlayedTracks(user: any): Promise<void> {
 	const accessToken = await getValidAccessToken(user);
-
+	if (!accessToken) {
+		console.warn(`Skipping played tracks update for user ${user.id} due to missing access token.`);
+		return;
+	}
+	console.log("USER", user.displayName);
+	console.log("TOKEN", accessToken);
 	const spotifyUrl = "https://api.spotify.com/v1/me/player/recently-played?limit=50";
 	const res = await fetch(spotifyUrl, {
 		headers: { Authorization: `Bearer ${accessToken}` },
@@ -105,6 +115,10 @@ export async function updatePlayedTracks(user: any): Promise<void> {
 
 export async function updateSavedTracks(user: any): Promise<void> {
 	const accessToken = await getValidAccessToken(user);
+	if (!accessToken) {
+		console.warn(`Skipping played tracks update for user ${user.id} due to missing access token.`);
+		return;
+	}
 	const spotifyUrl = "https://api.spotify.com/v1/me/tracks?";
 
 	const res = await fetch(spotifyUrl, {

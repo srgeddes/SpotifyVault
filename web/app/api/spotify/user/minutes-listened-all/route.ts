@@ -11,27 +11,38 @@ export async function GET(request: Request) {
 
 		const usersWithMinutes = await Promise.all(
 			users.map(async (user) => {
-				const minutes = await getTotalMinutesListened(user, daysAgo);
+				try {
+					const minutes = await getTotalMinutesListened(user, daysAgo);
 
-				let profileImage = null;
-				if (user.accessToken) {
-					const profile = await getSpotifyUserProfile(user.accessToken);
-					profileImage = profile?.images?.[0]?.url || null;
+					let profileImage = null;
+					if (user.accessToken) {
+						try {
+							const profile = await getSpotifyUserProfile(user.accessToken);
+							profileImage = profile?.images?.[0]?.url || null;
+						} catch (err) {
+							console.warn(`Could not fetch profile for user ${user.id}:`, err);
+						}
+					}
+
+					return {
+						id: user.id,
+						displayName: user.displayName || "Unknown User",
+						spotifyId: user.spotifyId,
+						profileImage: profileImage,
+						minutesListened: minutes,
+					};
+				} catch (err) {
+					console.warn(`Skipping user ${user.id} due to error:`, err);
+					return null; // Skip this user
 				}
-
-				return {
-					id: user.id,
-					displayName: user.displayName || "Unknown User",
-					spotifyId: user.spotifyId,
-					profileImage: profileImage,
-					minutesListened: minutes,
-				};
 			})
 		);
 
-		usersWithMinutes.sort((a, b) => b.minutesListened - a.minutesListened);
+		const validUsers = usersWithMinutes.filter(Boolean); // filter out nulls
 
-		return NextResponse.json({ users: usersWithMinutes });
+		validUsers.sort((a, b) => b.minutesListened - a.minutesListened);
+
+		return NextResponse.json({ users: validUsers });
 	} catch (error) {
 		console.error("Error fetching user minutes:", error);
 		return NextResponse.json({ error: "Failed to fetch user minutes" }, { status: 500 });
