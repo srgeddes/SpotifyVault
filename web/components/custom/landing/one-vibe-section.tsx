@@ -7,7 +7,7 @@ import { signIn } from "next-auth/react";
 
 export default function OneVibeSection() {
 	return (
-		<div className="flex flex-col items-center w-full space-y-6 pt-40 px-4">
+		<div className="flex flex-col items-center w-full space-y-6 px-4">
 			<div className="text-center max-w-4xl">
 				<motion.h1
 					className="text-5xl sm:text-6xl md:text-7xl font-bold text-black mb-6 dark:text-white"

@@ -17,6 +17,7 @@ export default function Footer() {
 	return (
 		<footer className={`w-full ${footerBgClass}`}>
 			<div className="max-w-2xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+				{/* Mobile Layout */}
 				<div className="md:hidden flex flex-col space-y-6">
 					<div className="flex justify-end">
 						<Link href="/" className="flex items-end">
@@ -43,6 +44,21 @@ export default function Footer() {
 							</Link>
 						</motion.div>
 					</div>
+					<div className="flex justify-center space-x-8">
+						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
+							<Link href="/terms" className="text-black dark:text-white">
+								Terms of Service
+							</Link>
+						</motion.div>
+						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
+							<Link href="/privacy" className="text-black dark:text-white">
+								Privacy Policy
+							</Link>
+						</motion.div>
+					</div>
+
+					{/* Desktop Layout */}
+
 					<div className="flex justify-center space-x-4">
 						<motion.div whileHover={{ scale: 1.15 }} className="cursor-pointer">
 							<Link href="https://github.com/srgeddes/sonalli" className="text-neutral-700">
@@ -99,6 +115,16 @@ export default function Footer() {
 						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
 							<Link href="mailto:rileygeddes@virginia.edu" className="text-black dark:text-white">
 								Contact
+							</Link>
+						</motion.div>
+						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
+							<Link href="/terms" className="text-black dark:text-white">
+								Terms
+							</Link>
+						</motion.div>
+						<motion.div whileHover={{ scale: 1.05 }} className="cursor-pointer">
+							<Link href="/privacy" className="text-black dark:text-white">
+								Privacy
 							</Link>
 						</motion.div>
 						<button onClick={toggleTheme} className="p-0 lg:p-2 cursor-pointer">

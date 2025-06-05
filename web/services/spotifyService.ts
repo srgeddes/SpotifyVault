@@ -67,8 +67,6 @@ export async function updatePlayedTracks(user: any): Promise<void> {
 		console.warn(`Skipping played tracks update for user ${user.id} due to missing access token.`);
 		return;
 	}
-	console.log("USER", user.displayName);
-	console.log("TOKEN", accessToken);
 	const spotifyUrl = "https://api.spotify.com/v1/me/player/recently-played?limit=50";
 	const res = await fetch(spotifyUrl, {
 		headers: { Authorization: `Bearer ${accessToken}` },
@@ -81,7 +79,6 @@ export async function updatePlayedTracks(user: any): Promise<void> {
 	const data = await res.json();
 
 	if (data.items) {
-		console.log("USER", user.displayName);
 		for (const item of data.items) {
 			const track = item.track;
 
@@ -167,7 +164,6 @@ export async function updateArtistFollows(user: any): Promise<void> {
 	}
 
 	const data = await res.json();
-	console.log(data);
 
 	if (data.artists?.items) {
 		for (const artist of data.artists.items) {

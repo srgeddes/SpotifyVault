@@ -37,53 +37,55 @@ export default function Navbar() {
 	const barColor = theme === "dark" ? "black" : "white";
 
 	return (
-		<nav className="fixed top-0 z-50 w-full bg-background-custom/50 backdrop-blur-md py-4 border-neutral-300 dark:bg-black/70">
-			<div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
-				<Link href="/" className="flex items-end">
-					<Logo width={50} height={50} />
-					<span className="ml-1 text-xl font-bold text-black dark:text-white">sonalli</span>
-				</Link>
+		<div className="pb-40">
+			<nav className="fixed top-0 z-50 w-full bg-background-custom/50 backdrop-blur-md py-4 border-neutral-300 dark:bg-black/70">
+				<div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
+					<Link href="/" className="flex items-end">
+						<Logo width={50} height={50} />
+						<span className="ml-1 text-xl font-bold text-black dark:text-white">sonalli</span>
+					</Link>
 
-				<motion.div whileHover={{ scale: 1.05 }}>
+					<motion.div whileHover={{ scale: 1.05 }}>
+						<Button
+							variant="default"
+							onClick={() => signIn("spotify", { callbackUrl: "/vault" })}
+							onMouseEnter={() => setIsHovering(true)}
+							onMouseLeave={() => setIsHovering(false)}>
+							<AnimatePresence>
+								{isHovering && (
+									<motion.div
+										initial={{ opacity: 0, width: 0 }}
+										animate={{ opacity: 1, width: "auto" }}
+										exit={{ opacity: 0, width: 0 }}
+										transition={{ duration: 0.2 }}>
+										<AnimatedBars barwidth={2} barcolor={barColor} />
+									</motion.div>
+								)}
+							</AnimatePresence>
+							Login
+						</Button>
+					</motion.div>
+
 					<Button
-						variant="default"
-						onClick={() => signIn("spotify", { callbackUrl: "/vault" })}
-						onMouseEnter={() => setIsHovering(true)}
-						onMouseLeave={() => setIsHovering(false)}>
-						<AnimatePresence>
-							{isHovering && (
-								<motion.div
-									initial={{ opacity: 0, width: 0 }}
-									animate={{ opacity: 1, width: "auto" }}
-									exit={{ opacity: 0, width: 0 }}
-									transition={{ duration: 0.2 }}>
-									<AnimatedBars barwidth={2} barcolor={barColor} />
-								</motion.div>
-							)}
-						</AnimatePresence>
-						Login
+						variant="ghost"
+						size="sm"
+						className="md:hidden p-1"
+						onClick={(e) => {
+							e.stopPropagation();
+							setMobileMenuOpen(!mobileMenuOpen);
+						}}>
+						<Menu size={24} />
 					</Button>
-				</motion.div>
-
-				<Button
-					variant="ghost"
-					size="sm"
-					className="md:hidden p-1"
-					onClick={(e) => {
-						e.stopPropagation();
-						setMobileMenuOpen(!mobileMenuOpen);
-					}}>
-					<Menu size={24} />
-				</Button>
-			</div>
-
-			{mobileMenuOpen && (
-				<div className="md:hidden absolute top-full left-0 w-full bg-white shadow-md rounded-b-xl">
-					<div className="flex flex-col px-4 py-2 space-y-3"></div>
 				</div>
-			)}
 
-			<ScrollProgress className="top-[82px]" />
-		</nav>
+				{mobileMenuOpen && (
+					<div className="md:hidden absolute top-full left-0 w-full bg-white shadow-md rounded-b-xl">
+						<div className="flex flex-col px-4 py-2 space-y-3"></div>
+					</div>
+				)}
+
+				<ScrollProgress className="top-[82px]" />
+			</nav>
+		</div>
 	);
 }
