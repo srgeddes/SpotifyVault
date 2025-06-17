@@ -293,28 +293,42 @@ export async function getAllTrackPlays(user: any): Promise<TrackPlay[]> {
 	}
 }
 
-export async function getTotalMinutesListened(user: { id: string }, daysAgo: number): Promise<number> {
-	const threshold = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
-	const thresholdISO = threshold.toISOString();
+export async function getTotalMinutesListened(
+        user: { id: string },
+        daysAgo: number
+): Promise<number> {
+        const threshold = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+        const thresholdISO = threshold.toISOString();
 
-	const params = {
-		TableName: SPOTIFY_ACTIVITY_TABLE,
-		KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
-		FilterExpression: "playedAt >= :threshold",
-		ExpressionAttributeValues: {
-			":pk": `USER#${user.id}`,
-			":skPrefix": "TRACKPLAY#",
-			":threshold": thresholdISO,
-		},
-	};
+        const params = {
+                TableName: SPOTIFY_ACTIVITY_TABLE,
+                KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
+                FilterExpression: "playedAt >= :threshold",
+                ExpressionAttributeValues: {
+                        ":pk": `USER#${user.id}`,
+                        ":skPrefix": "TRACKPLAY#",
+                        ":threshold": thresholdISO,
+                },
+        };
 
-	const result = await ddbDocClient.send(new QueryCommand(params));
-	const trackPlays = (result.Items ?? []) as TrackPlay[];
+        let ExclusiveStartKey: Record<string, any> | undefined;
+        let trackPlays: TrackPlay[] = [];
 
-	const totalDurationMs = trackPlays.reduce((sum, trackPlay) => sum + (trackPlay.durationMs || 0), 0);
-	const totalMinutes = totalDurationMs / 60000;
+        do {
+                const result = await ddbDocClient.send(
+                        new QueryCommand({ ...params, ExclusiveStartKey })
+                );
+                trackPlays = trackPlays.concat((result.Items ?? []) as TrackPlay[]);
+                ExclusiveStartKey = result.LastEvaluatedKey;
+        } while (ExclusiveStartKey);
 
-	return totalMinutes;
+        const totalDurationMs = trackPlays.reduce(
+                (sum, trackPlay) => sum + (trackPlay.durationMs || 0),
+                0
+        );
+        const totalMinutes = totalDurationMs / 60000;
+
+        return totalMinutes;
 }
 
 export async function getTopUsersByListeningMinutes(daysAgo: number, numUsers: number): Promise<Array<{ user: User; minutes: number }>> {
