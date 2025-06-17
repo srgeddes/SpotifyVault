@@ -273,24 +273,33 @@ export async function savePlaylist(playlist: Playlist): Promise<void> {
 }
 
 export async function getAllTrackPlays(user: any): Promise<TrackPlay[]> {
-	const params = {
-		TableName: SPOTIFY_ACTIVITY_TABLE,
-		KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
-		ExpressionAttributeValues: {
-			":pk": `USER#${user.id}`,
-			":skPrefix": "TRACKPLAY#",
-		} as Record<string, any>,
-		ScanIndexForward: false,
-	};
+        const params = {
+                TableName: SPOTIFY_ACTIVITY_TABLE,
+                KeyConditionExpression: "PK = :pk AND begins_with(SK, :skPrefix)",
+                ExpressionAttributeValues: {
+                        ":pk": `USER#${user.id}`,
+                        ":skPrefix": "TRACKPLAY#",
+                } as Record<string, any>,
+                ScanIndexForward: false,
+        };
 
-	try {
-		const result = await ddbDocClient.send(new QueryCommand(params));
-		console.log("RESULT", result);
-		return (result.Items ?? []) as TrackPlay[];
-	} catch (error) {
-		console.error("Error querying track plays:", error);
-		throw error;
-	}
+        let trackPlays: TrackPlay[] = [];
+        let ExclusiveStartKey: Record<string, any> | undefined;
+
+        try {
+                do {
+                        const result = await ddbDocClient.send(
+                                new QueryCommand({ ...params, ExclusiveStartKey })
+                        );
+                        trackPlays = trackPlays.concat((result.Items ?? []) as TrackPlay[]);
+                        ExclusiveStartKey = result.LastEvaluatedKey;
+                } while (ExclusiveStartKey);
+
+                return trackPlays;
+        } catch (error) {
+                console.error("Error querying track plays:", error);
+                throw error;
+        }
 }
 
 export async function getTotalMinutesListened(
