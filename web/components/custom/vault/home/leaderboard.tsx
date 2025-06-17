@@ -5,6 +5,7 @@ import { AnimatedList } from "@/components/magicui/animated-list";
 import { User } from "lucide-react";
 import { SpotifyLink } from "../../SpotifyLink";
 import Image from "next/image";
+import Loading from "../../loading";
 
 export function Leaderboard({ className }: { className?: string }) {
 	const { users, error, loading } = useAllUsersWithMinutes();
@@ -22,7 +23,9 @@ export function Leaderboard({ className }: { className?: string }) {
 	return (
 		<div className={cn("relative flex w-5/6 flex-col overflow-visible", className)}>
 			{loading ? (
-				<div className="text-center p-4"></div>
+				<div className="flex justify-center items-center">
+					<Loading />
+				</div>
 			) : error ? (
 				<div className="text-center text-red-500 p-4">Error loading leaderboard</div>
 			) : (

@@ -14,7 +14,7 @@ export default function OneVibeSection() {
 					initial={{ clipPath: "inset(0% 100% -10% 0%)" }}
 					animate={{ clipPath: "inset(0% 0% -20% 0%)" }}
 					transition={{ duration: 1.5, ease: "easeOut" }}>
-					One vibe. Real-time. <br /> <AuroraText> All together.</AuroraText>
+					Spotify Wrapped <br /> <AuroraText> Year Round.</AuroraText>
 				</motion.h1>
 
 				<motion.p
